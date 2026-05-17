@@ -32,3 +32,56 @@ In this application, users can share their cocktail recipes.
   - creation date
   - average rating
 - Latest / highest rated recipes are highlighted on the main page
+
+## Local development environment setup
+
+### Prerequisites
+
+The application requires a sqlite database. You can create one using the following script:
+
+```
+sqlite3 database.db < schema.sql
+```
+
+The application requires a secret key for session management. You can use the following script to generate a random key:
+
+```
+export SECRET_KEY=`python3 -c 'import secrets;print(secrets.token_hex(16))'`
+```
+
+### Option 1: With Poetry
+
+The application is developed using [Poetry](https://python-poetry.org/docs/) (version 2.3.2).
+
+Install dependencies
+
+```
+poetry install
+```
+
+Run the application
+
+```
+poetry run flask --app src/app run
+```
+
+### Option 2: Without Poetry
+
+Create and activate a new virtual environment
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies
+
+```
+pip install -r requirements.txt
+```
+
+Run the application
+
+```
+flask --app src/app run
+```
