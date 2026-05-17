@@ -1,0 +1,8 @@
+.mypy_cache
+.poetry
+.venv
+.vscode/
+
+src/**/__pycache__/*
+
+database.db
