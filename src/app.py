@@ -5,7 +5,7 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from recipe.model import CreateRecipeForm
-from recipe.queries import create_recipe
+from recipe.queries import create_recipe, get_recipes
 from user.model import (
     CreateUserForm,
     LoggedInUser,
@@ -44,8 +44,8 @@ def get_logged_in_user() -> LoggedInUser | None:
 def get_index():
     if not logged_in():
         return redirect("/login")
-
-    return render_template("index.html")
+    recipes = get_recipes()
+    return render_template("index.html", recipes=recipes)
 
 
 @app.route("/login", methods=["GET"])

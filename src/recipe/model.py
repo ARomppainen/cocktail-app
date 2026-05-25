@@ -2,6 +2,17 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
+class Recipe:
+    id: str
+    user_id: str
+    created_at: str
+    title: str
+    ingredients: str
+    glass: str
+    instructions: str
+
+
+@dataclass(frozen=True)
 class CreateRecipeForm:
     title: str
     ingredients: str

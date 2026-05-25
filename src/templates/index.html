@@ -11,6 +11,13 @@
 
     <a href="/recipes/new">Create a new recipe</a>
 
+    <h2>Recipes</h2>
+    <ul>
+        {% for recipe in recipes %}
+        <li>{{recipe.title}}</li>
+        {% endfor %}
+    </ul>
+
     <form action="/logout" method="post">
         <input type="submit" value="Log out" />
     </form>
