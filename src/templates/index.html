@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <p>Hello {{ session.username }}</p>
+    <p>Hello {{ session.user.username }}</p>
     <form action="/logout" method="post">
         <input type="submit" value="Log out" />
     </form>

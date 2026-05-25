@@ -11,15 +11,24 @@
     <form action="/register" method="post">
         <p>
             <label for="username">Username</label>
-            <input type="text" name="username" />
+            <input type="text" name="username" value="{{form.username}}" required />
+            {% if "username" in validation_errors %}
+            <span>{{validation_errors["username"]}}</span>
+            {% endif %}
         </p>
         <p>
             <label for="password1">Password</label>
-            <input type="password" name="password1" />
+            <input type="password" name="password1" value="{{form.password1}}" required />
+            {% if "password1" in validation_errors %}
+            <span>{{validation_errors["password1"]}}</span>
+            {% endif %}
         </p>
         <p>
             <label for="password2">Repeat password</label>
-            <input type="password" name="password2" />
+            <input type="password" name="password2" value="{{form.password2}}" required />
+            {% if "password2" in validation_errors %}
+            <span>{{validation_errors["password2"]}}</span>
+            {% endif %}
         </p>
         <input type="submit" value="Register" />
     </form>

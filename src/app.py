@@ -1,9 +1,17 @@
 import os
-import sqlite3
+
 from flask import Flask
 from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
-import db
+
+from user.model import (
+    CreateUserForm,
+    LoggedInUser,
+    LoginForm,
+    User,
+    UsernameNotAvailableError,
+)
+from user.queries import create_user, get_user
 
 app = Flask(__name__)
 
@@ -14,9 +22,21 @@ if not (SECRET_KEY := os.environ.get("SECRET_KEY")):
 app.secret_key = SECRET_KEY
 
 
+def log_in(user: User) -> None:
+    session["user"] = LoggedInUser(id=user.id, username=user.username)
+
+
+def logged_in() -> bool:
+    return "user" in session
+
+
+def log_out() -> None:
+    del session["user"]
+
+
 @app.route("/", methods=["GET"])
 def get_index():
-    if "username" not in session:
+    if not logged_in():
         return redirect("/login")
 
     return render_template("index.html")
@@ -24,59 +44,65 @@ def get_index():
 
 @app.route("/login", methods=["GET"])
 def get_login():
-    return render_template(
-        "login.html",
-    )
-
-
-@app.route("/logout", methods=["POST"])
-def post_logout():
-    del session["username"]
-    return redirect("/")
+    return render_template("login.html", form=LoginForm.empty())
 
 
 @app.route("/login", methods=["POST"])
 def post_login():
-    username = request.form["username"]
-    password = request.form["password"]
+    form = LoginForm(
+        username=request.form["username"], password=request.form["password"]
+    )
 
-    sql = "SELECT password_hash FROM user WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
+    if validation_errors := form.validate():
+        return render_template(
+            "login.html", form=form, validation_errors=validation_errors
+        )
 
-    if not check_password_hash(password_hash, password):
-        return "ERROR: Incorrect username or password"
+    user = get_user(form.username)
 
-    session["username"] = username
+    if not user or not check_password_hash(user.password_hash, form.password):
+        return render_template(
+            "login.html", form=form, error="Incorrect username or password"
+        )
+
+    log_in(user)
     return redirect("/")
 
 
-@app.route("/recipes", methods=["GET"])
-def get_recipes():
-    return render_template(
-        "recipes.html",
-    )
+@app.route("/logout", methods=["POST"])
+def post_logout():
+    if not logged_in():
+        return redirect("/login")
+    log_out()
+    return redirect("/")
 
 
 @app.route("/register", methods=["GET"])
 def get_register():
-    return render_template("register.html")
+    return render_template("register.html", form=CreateUserForm.empty())
 
 
 @app.route("/register", methods=["POST"])
 def post_register():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
+    form = CreateUserForm(
+        username=request.form["username"],
+        password1=request.form["password1"],
+        password2=request.form["password2"],
+    )
 
-    if password1 != password2:
-        return "ERROR: the passwords did not match"
-    password_hash = generate_password_hash(password1)
+    if validation_errors := form.validate():
+        return render_template(
+            "register.html", form=form, validation_errors=validation_errors
+        )
 
     try:
-        sql = "INSERT INTO user (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError:
-        return "ERROR: the given account is already in use"
+        user = create_user(form.username, generate_password_hash(form.password1))
+    except UsernameNotAvailableError:
+        return render_template(
+            "register.html",
+            form=form,
+            validation_errors={"username": "Username not available"},
+        )
 
-    session["username"] = username
+    log_in(user)
     return redirect("/")

@@ -1,5 +1,4 @@
 import sqlite3
-from flask import g
 
 
 def get_connection():
@@ -9,16 +8,12 @@ def get_connection():
     return con
 
 
-def execute(sql, params=None):
+def execute(sql, params=None) -> int:
     con = get_connection()
     result = con.execute(sql, params or [])
     con.commit()
-    g.last_insert_id = result.lastrowid
     con.close()
-
-
-def last_insert_id():
-    return g.last_insert_id
+    return result.lastrowid
 
 
 def query(sql, params=None):
