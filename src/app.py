@@ -4,6 +4,8 @@ from flask import Flask
 from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from recipe.model import CreateRecipeForm
+from recipe.queries import create_recipe
 from user.model import (
     CreateUserForm,
     LoggedInUser,
@@ -32,6 +34,10 @@ def logged_in() -> bool:
 
 def log_out() -> None:
     del session["user"]
+
+
+def get_logged_in_user() -> LoggedInUser | None:
+    return session["user"] if "user" in session else None
 
 
 @app.route("/", methods=["GET"])
@@ -105,4 +111,34 @@ def post_register():
         )
 
     log_in(user)
+    return redirect("/")
+
+
+@app.route("/recipes/new", methods=["GET"])
+def get_new_recipe():
+    if not logged_in():
+        return redirect("/login")
+    return render_template("new_recipe.html", form=CreateRecipeForm.empty())
+
+
+@app.route("/recipes/new", methods=["POST"])
+def post_recipe():
+    user = get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    form = CreateRecipeForm(
+        title=request.form["title"],
+        ingredients=request.form["ingredients"],
+        glass=request.form["glass"],
+        instructions=request.form["instructions"],
+    )
+
+    if validation_errors := form.validate():
+        return render_template(
+            "new_recipe.html", form=form, validation_errors=validation_errors
+        )
+
+    create_recipe(form, user["id"])
+
     return redirect("/")
