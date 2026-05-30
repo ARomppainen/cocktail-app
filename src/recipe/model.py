@@ -24,5 +24,18 @@ class CreateRecipeForm:
         return CreateRecipeForm("", "", "", "")
 
     def validate(self) -> dict[str, str]:
-        # TODO: Add form validation
-        return {}
+        errors: dict[str, str] = {}
+
+        if not self.title:
+            errors["title"] = "Value is required"
+
+        if not self.ingredients:
+            errors["ingredients"] = "Value is required"
+
+        if not self.glass:
+            errors["glass"] = "Value is required"
+
+        if not self.instructions:
+            errors["instructions"] = "Value is required"
+
+        return errors
