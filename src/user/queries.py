@@ -18,10 +18,10 @@ def get_user(username: str) -> User | None:
 def create_user(username: str, password_hash: str) -> User:
     sql = "INSERT INTO user (username, password_hash) VALUES (?, ?)"
     try:
-        row_id = db.execute(
+        result = db.execute(
             sql,
             [username, password_hash],
         )
-        return User(id=row_id, username=username, password_hash=password_hash)
+        return User(id=result.lastrowid, username=username, password_hash=password_hash)
     except sqlite3.IntegrityError as err:
         raise UsernameNotAvailableError from err

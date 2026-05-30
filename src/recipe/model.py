@@ -13,15 +13,15 @@ class Recipe:
 
 
 @dataclass(frozen=True)
-class CreateRecipeForm:
+class RecipeForm:
     title: str
     ingredients: str
     glass: str
     instructions: str
 
     @staticmethod
-    def empty() -> "CreateRecipeForm":
-        return CreateRecipeForm("", "", "", "")
+    def empty() -> "RecipeForm":
+        return RecipeForm("", "", "", "")
 
     def validate(self) -> dict[str, str]:
         errors: dict[str, str] = {}

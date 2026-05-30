@@ -1,7 +1,8 @@
 import db
+import sqlite3
 from typing import Any
 
-from recipe.model import CreateRecipeForm, Recipe
+from recipe.model import RecipeForm, Recipe
 
 
 def get_recipe(recipe_id: int) -> Recipe | None:
@@ -16,11 +17,27 @@ def get_recipes() -> list[Recipe]:
     return [_to_recipe(row) for row in result]
 
 
-def create_recipe(form: CreateRecipeForm, user_id: str) -> None:
+def create_recipe(form: RecipeForm, user_id: str) -> None:
     sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, glass, instructions) VALUES (?, datetime('now'), ?, ?, ?, ?)"
     db.execute(
         sql, [user_id, form.title, form.ingredients, form.glass, form.instructions]
     )
+
+
+def update_recipe(form: RecipeForm, user_id: str, recipe_id: str) -> bool:
+    sql = "UPDATE recipe SET title = ?, ingredients = ?, glass = ?, instructions = ? WHERE id = ? AND user_id = ?"
+    result = db.execute(
+        sql,
+        [
+            form.title,
+            form.ingredients,
+            form.glass,
+            form.instructions,
+            recipe_id,
+            user_id,
+        ],
+    )
+    return bool(result.rowcount)
 
 
 def _to_recipe(row: Any) -> Recipe:

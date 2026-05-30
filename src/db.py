@@ -8,12 +8,12 @@ def get_connection():
     return con
 
 
-def execute(sql, params=None) -> int:
+def execute(sql, params=None) -> sqlite3.Cursor:
     con = get_connection()
     result = con.execute(sql, params or [])
     con.commit()
     con.close()
-    return result.lastrowid
+    return result
 
 
 def query(sql, params=None):

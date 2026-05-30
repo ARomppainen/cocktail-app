@@ -5,7 +5,7 @@ from flask import Flask
 from flask import abort, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from recipe.model import CreateRecipeForm
+from recipe.model import RecipeForm
 import recipe.queries as recipe_queries
 from user.model import (
     CreateUserForm,
@@ -139,7 +139,7 @@ def post_register():
 def get_new_recipe():
     if not logged_in():
         return redirect("/login")
-    return render_template("new_recipe.html", form=CreateRecipeForm.empty())
+    return render_template("new_recipe.html", form=RecipeForm.empty())
 
 
 @app.route("/recipe", methods=["POST"])
@@ -148,7 +148,7 @@ def post_recipe():
     if not user:
         return redirect("/login")
 
-    form = CreateRecipeForm(
+    form = RecipeForm(
         title=request.form["title"],
         ingredients=request.form["ingredients"],
         glass=request.form["glass"],
@@ -179,3 +179,59 @@ def get_recipe(recipe_id: int):
         abort(NOT_FOUND)
 
     return render_template("recipe_details.html", recipe=recipe)
+
+
+@app.route("/recipe/<int:recipe_id>/update", methods=["GET"])
+def get_recipe_update(recipe_id: int):
+    user = get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    recipe = recipe_queries.get_recipe(recipe_id)
+
+    if not recipe:
+        abort(NOT_FOUND)
+
+    if user["id"] != recipe.user_id:
+        abort(NOT_FOUND)
+
+    form = RecipeForm(
+        title=recipe.title,
+        ingredients=recipe.ingredients,
+        glass=recipe.glass,
+        instructions=recipe.instructions,
+    )
+
+    return render_template("recipe_edit.html", recipe_id=recipe_id, form=form)
+
+
+@app.route("/recipe/<int:recipe_id>/update", methods=["POST"])
+def post_recipe_update(recipe_id: int):
+    user = get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    form = RecipeForm(
+        title=request.form["title"],
+        ingredients=request.form["ingredients"],
+        glass=request.form["glass"],
+        instructions=request.form["instructions"],
+    )
+
+    if validation_errors := form.validate():
+        return (
+            render_template(
+                "recipe_edit.html",
+                recipe_id=recipe_id,
+                form=form,
+                validation_errors=validation_errors,
+            ),
+            BAD_REQUEST,
+        )
+
+    found = recipe_queries.update_recipe(form, user["id"], recipe_id)
+
+    if not found:
+        abort(NOT_FOUND)
+
+    return redirect(f"/recipe/{recipe_id}")
