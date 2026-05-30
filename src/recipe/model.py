@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Recipe:
-    id: str
-    user_id: str
+    id: int
+    user_id: int
     created_at: str
     title: str
     ingredients: str

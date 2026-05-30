@@ -3,13 +3,13 @@ from typing import TypedDict
 
 
 class LoggedInUser(TypedDict):
-    id: str
+    id: int
     username: str
 
 
 @dataclass(frozen=True)
 class User:
-    id: str
+    id: int
     username: str
     password_hash: str
 

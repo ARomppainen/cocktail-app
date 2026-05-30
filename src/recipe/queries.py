@@ -17,14 +17,14 @@ def get_recipes() -> list[Recipe]:
     return [_to_recipe(row) for row in result]
 
 
-def create_recipe(form: RecipeForm, user_id: str) -> None:
+def create_recipe(form: RecipeForm, user_id: int) -> None:
     sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, glass, instructions) VALUES (?, datetime('now'), ?, ?, ?, ?)"
     db.execute(
         sql, [user_id, form.title, form.ingredients, form.glass, form.instructions]
     )
 
 
-def update_recipe(form: RecipeForm, user_id: str, recipe_id: str) -> bool:
+def update_recipe(form: RecipeForm, user_id: int, recipe_id: int) -> bool:
     sql = "UPDATE recipe SET title = ?, ingredients = ?, glass = ?, instructions = ? WHERE id = ? AND user_id = ?"
     result = db.execute(
         sql,
