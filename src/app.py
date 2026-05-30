@@ -1,11 +1,12 @@
 import os
+from typing import Any
 
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import abort, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from recipe.model import CreateRecipeForm
-from recipe.queries import create_recipe, get_recipes
+import recipe.queries as recipe_queries
 from user.model import (
     CreateUserForm,
     LoggedInUser,
@@ -22,6 +23,8 @@ if not (SECRET_KEY := os.environ.get("SECRET_KEY")):
     os.abort()
 
 app.secret_key = SECRET_KEY
+
+NOT_FOUND = 404
 
 
 def log_in(user: User) -> None:
@@ -40,11 +43,16 @@ def get_logged_in_user() -> LoggedInUser | None:
     return session["user"] if "user" in session else None
 
 
+@app.errorhandler(NOT_FOUND)
+def not_found(error: Any):
+    return render_template("not_found.html"), NOT_FOUND
+
+
 @app.route("/", methods=["GET"])
 def get_index():
     if not logged_in():
         return redirect("/login")
-    recipes = get_recipes()
+    recipes = recipe_queries.get_recipes()
     return render_template("index.html", recipes=recipes)
 
 
@@ -139,6 +147,19 @@ def post_recipe():
             "new_recipe.html", form=form, validation_errors=validation_errors
         )
 
-    create_recipe(form, user["id"])
+    recipe_queries.create_recipe(form, user["id"])
 
     return redirect("/")
+
+
+@app.route("/recipes/<int:recipe_id>", methods=["GET"])
+def get_recipe(recipe_id: int):
+    if not logged_in():
+        return redirect("/login")
+
+    recipe = recipe_queries.get_recipe(recipe_id)
+
+    if not recipe:
+        abort(NOT_FOUND)
+
+    return render_template("recipe_details.html", recipe=recipe)
