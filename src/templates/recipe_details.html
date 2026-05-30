@@ -14,6 +14,9 @@
 
     {% if session.user.id == recipe.user_id %}
     <a href="/recipe/{{recipe.id}}/update">Edit recipe</a>
+    <form action="/recipe/{{recipe.id}}/delete" method="post">
+        <input type="submit" value="Delete recipe" />
+    </form>
     {% endif %}
 
 </html>

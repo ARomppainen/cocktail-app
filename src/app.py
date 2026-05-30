@@ -235,3 +235,14 @@ def post_recipe_update(recipe_id: int):
         abort(NOT_FOUND)
 
     return redirect(f"/recipe/{recipe_id}")
+
+
+@app.route("/recipe/<int:recipe_id>/delete", methods=["POST"])
+def post_recipe_delete(recipe_id: int):
+    user = get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    recipe_queries.delete_recipe(user["id"], recipe_id)
+
+    return redirect("/")

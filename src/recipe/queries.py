@@ -40,6 +40,11 @@ def update_recipe(form: RecipeForm, user_id: int, recipe_id: int) -> bool:
     return bool(result.rowcount)
 
 
+def delete_recipe(user_id: int, recipe_id: int) -> None:
+    sql = "DELETE FROM recipe WHERE id = ? AND user_id = ?"
+    db.execute(sql, [recipe_id, user_id])
+
+
 def _to_recipe(row: Any) -> Recipe:
     return Recipe(
         id=row["id"],
