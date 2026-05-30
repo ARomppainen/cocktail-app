@@ -5,7 +5,7 @@ from flask import Flask
 from flask import abort, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from recipe.model import RecipeForm
+from recipe.model import RecipeForm, RecipeSearchForm
 import recipe.queries as recipe_queries
 from user.model import (
     CreateUserForm,
@@ -53,8 +53,17 @@ def not_found(error: Any):
 def get_index():
     if not logged_in():
         return redirect("/login")
-    recipes = recipe_queries.get_recipes()
-    return render_template("index.html", recipes=recipes)
+
+    form = RecipeSearchForm(query=request.args.get("query"))
+    # TODO: validate query string
+
+    recipes = (
+        recipe_queries.search_recipes(form.query)
+        if form.query
+        else recipe_queries.get_recipes()
+    )
+
+    return render_template("index.html", form=form, recipes=recipes)
 
 
 @app.route("/login", methods=["GET"])

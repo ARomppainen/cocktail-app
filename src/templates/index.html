@@ -3,24 +3,35 @@
 <html lang="en">
 
 <head>
-    <title>Index</title>
+    <title>Cocktail app</title>
 </head>
 
 <body>
-    <p>Hello {{ session.user.username }}</p>
+    <header>
+        <p>Hello {{ session.user.username }}</p>
+        <form action="/logout" method="post">
+            <input type="submit" value="Log out" />
+        </form>
+    </header>
 
-    <a href="/recipe">Create a new recipe</a>
+    <main>
+        <h1>Recipes</h1>
 
-    <h2>Recipes</h2>
-    <ul>
-        {% for recipe in recipes %}
-        <li><a href="/recipe/{{recipe.id}}">{{recipe.title}}</a></li>
-        {% endfor %}
-    </ul>
+        <a href="/recipe">Create a new recipe</a>
 
-    <form action="/logout" method="post">
-        <input type="submit" value="Log out" />
-    </form>
+        <form action="/" method="get">
+            <input type="text" name="query" value="{{form.query or ''}}" />
+            <input type="submit" value="Search" />
+        </form>
+        <ul>
+            {% for recipe in recipes %}
+            <li><a href="/recipe/{{recipe.id}}">{{recipe.title}}</a></li>
+            {% endfor %}
+        </ul>
+        {% if not recipes %}
+        <p>No recipes found</p>
+        {% endif %}
+    </main>
 </body>
 
 </html>

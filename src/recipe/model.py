@@ -39,3 +39,8 @@ class RecipeForm:
             errors["instructions"] = "Value is required"
 
         return errors
+
+
+@dataclass(frozen=True)
+class RecipeSearchForm:
+    query: str | None

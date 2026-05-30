@@ -17,6 +17,20 @@ def get_recipes() -> list[Recipe]:
     return [_to_recipe(row) for row in result]
 
 
+def search_recipes(query: str) -> list[Recipe]:
+    sql = """
+        SELECT id, user_id, created_at, title, ingredients, glass, instructions
+        FROM recipe
+        WHERE title LIKE ?
+        OR ingredients LIKE ?
+        OR glass LIKE ?
+        OR instructions LIKE ?
+    """
+    q = f"%{query}%"
+    result = db.query(sql, [q, q, q, q])
+    return [_to_recipe(row) for row in result]
+
+
 def create_recipe(form: RecipeForm, user_id: int) -> None:
     sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, glass, instructions) VALUES (?, datetime('now'), ?, ?, ?, ?)"
     db.execute(
