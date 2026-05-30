@@ -24,6 +24,7 @@ if not (SECRET_KEY := os.environ.get("SECRET_KEY")):
 
 app.secret_key = SECRET_KEY
 
+BAD_REQUEST = 400
 NOT_FOUND = 404
 
 
@@ -68,15 +69,21 @@ def post_login():
     )
 
     if validation_errors := form.validate():
-        return render_template(
-            "login.html", form=form, validation_errors=validation_errors
+        return (
+            render_template(
+                "login.html", form=form, validation_errors=validation_errors
+            ),
+            BAD_REQUEST,
         )
 
     user = get_user(form.username)
 
     if not user or not check_password_hash(user.password_hash, form.password):
-        return render_template(
-            "login.html", form=form, error="Incorrect username or password"
+        return (
+            render_template(
+                "login.html", form=form, error="Incorrect username or password"
+            ),
+            BAD_REQUEST,
         )
 
     log_in(user)
@@ -105,17 +112,23 @@ def post_register():
     )
 
     if validation_errors := form.validate():
-        return render_template(
-            "register.html", form=form, validation_errors=validation_errors
+        return (
+            render_template(
+                "register.html", form=form, validation_errors=validation_errors
+            ),
+            BAD_REQUEST,
         )
 
     try:
         user = create_user(form.username, generate_password_hash(form.password1))
     except UsernameNotAvailableError:
-        return render_template(
-            "register.html",
-            form=form,
-            validation_errors={"username": "Username not available"},
+        return (
+            render_template(
+                "register.html",
+                form=form,
+                validation_errors={"username": "Username not available"},
+            ),
+            BAD_REQUEST,
         )
 
     log_in(user)
@@ -143,8 +156,11 @@ def post_recipe():
     )
 
     if validation_errors := form.validate():
-        return render_template(
-            "new_recipe.html", form=form, validation_errors=validation_errors
+        return (
+            render_template(
+                "new_recipe.html", form=form, validation_errors=validation_errors
+            ),
+            BAD_REQUEST,
         )
 
     recipe_queries.create_recipe(form, user["id"])
