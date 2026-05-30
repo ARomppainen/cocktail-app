@@ -135,14 +135,14 @@ def post_register():
     return redirect("/")
 
 
-@app.route("/recipes/new", methods=["GET"])
+@app.route("/recipe", methods=["GET"])
 def get_new_recipe():
     if not logged_in():
         return redirect("/login")
     return render_template("new_recipe.html", form=CreateRecipeForm.empty())
 
 
-@app.route("/recipes/new", methods=["POST"])
+@app.route("/recipe", methods=["POST"])
 def post_recipe():
     user = get_logged_in_user()
     if not user:
@@ -168,7 +168,7 @@ def post_recipe():
     return redirect("/")
 
 
-@app.route("/recipes/<int:recipe_id>", methods=["GET"])
+@app.route("/recipe/<int:recipe_id>", methods=["GET"])
 def get_recipe(recipe_id: int):
     if not logged_in():
         return redirect("/login")
