@@ -28,20 +28,23 @@ BAD_REQUEST = 400
 NOT_FOUND = 404
 
 
-def log_in(user: User) -> None:
-    session["user"] = LoggedInUser(id=user.id, username=user.username)
+class Session:
 
+    @staticmethod
+    def log_in(user: User) -> None:
+        session["user"] = LoggedInUser(id=user.id, username=user.username)
 
-def logged_in() -> bool:
-    return "user" in session
+    @staticmethod
+    def logged_in() -> bool:
+        return "user" in session
 
+    @staticmethod
+    def log_out() -> None:
+        del session["user"]
 
-def log_out() -> None:
-    del session["user"]
-
-
-def get_logged_in_user() -> LoggedInUser | None:
-    return session["user"] if "user" in session else None
+    @staticmethod
+    def get_logged_in_user() -> LoggedInUser | None:
+        return session["user"] if "user" in session else None
 
 
 @app.errorhandler(NOT_FOUND)
@@ -51,7 +54,7 @@ def not_found(error: Any):
 
 @app.route("/", methods=["GET"])
 def get_index():
-    if not logged_in():
+    if not Session.logged_in():
         return redirect("/login")
 
     form = RecipeSearchForm(query=request.args.get("query"))
@@ -95,15 +98,15 @@ def post_login():
             BAD_REQUEST,
         )
 
-    log_in(user)
+    Session.log_in(user)
     return redirect("/")
 
 
 @app.route("/logout", methods=["POST"])
 def post_logout():
-    if not logged_in():
+    if not Session.logged_in():
         return redirect("/login")
-    log_out()
+    Session.log_out()
     return redirect("/")
 
 
@@ -140,20 +143,20 @@ def post_register():
             BAD_REQUEST,
         )
 
-    log_in(user)
+    Session.log_in(user)
     return redirect("/")
 
 
 @app.route("/recipe", methods=["GET"])
 def get_new_recipe():
-    if not logged_in():
+    if not Session.logged_in():
         return redirect("/login")
     return render_template("new_recipe.html", form=RecipeForm.empty())
 
 
 @app.route("/recipe", methods=["POST"])
 def post_recipe():
-    user = get_logged_in_user()
+    user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
 
@@ -179,7 +182,7 @@ def post_recipe():
 
 @app.route("/recipe/<int:recipe_id>", methods=["GET"])
 def get_recipe(recipe_id: int):
-    if not logged_in():
+    if not Session.logged_in():
         return redirect("/login")
 
     recipe = recipe_queries.get_recipe(recipe_id)
@@ -192,7 +195,7 @@ def get_recipe(recipe_id: int):
 
 @app.route("/recipe/<int:recipe_id>/update", methods=["GET"])
 def get_recipe_update(recipe_id: int):
-    user = get_logged_in_user()
+    user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
 
@@ -216,7 +219,7 @@ def get_recipe_update(recipe_id: int):
 
 @app.route("/recipe/<int:recipe_id>/update", methods=["POST"])
 def post_recipe_update(recipe_id: int):
-    user = get_logged_in_user()
+    user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
 
@@ -248,7 +251,7 @@ def post_recipe_update(recipe_id: int):
 
 @app.route("/recipe/<int:recipe_id>/delete", methods=["POST"])
 def post_recipe_delete(recipe_id: int):
-    user = get_logged_in_user()
+    user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
 
