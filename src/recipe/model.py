@@ -8,7 +8,6 @@ class Recipe:
     created_at: str
     title: str
     ingredients: str
-    glass: str
     instructions: str
 
 
@@ -25,12 +24,11 @@ class RecipeSearchItem:
 class RecipeForm:
     title: str
     ingredients: str
-    glass: str
     instructions: str
 
     @staticmethod
     def empty() -> "RecipeForm":
-        return RecipeForm("", "", "", "")
+        return RecipeForm("", "", "")
 
     def validate(self) -> dict[str, str]:
         errors: dict[str, str] = {}
@@ -40,9 +38,6 @@ class RecipeForm:
 
         if not self.ingredients:
             errors["ingredients"] = "Value is required"
-
-        if not self.glass:
-            errors["glass"] = "Value is required"
 
         if not self.instructions:
             errors["instructions"] = "Value is required"

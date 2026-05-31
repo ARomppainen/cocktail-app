@@ -3,7 +3,6 @@
 <h2>Recipe details</h2>
 <p>{{recipe.title}}</p>
 <p>{{recipe.ingredients | show_lines}}</p>
-<p>{{recipe.glass}}</p>
 <p>{{recipe.instructions | show_lines}}</p>
 
 {% if session.user and session.user.id == recipe.user_id %}

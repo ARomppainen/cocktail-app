@@ -169,7 +169,6 @@ def create_new_recipe():
     form = RecipeForm(
         title=request.form["title"],
         ingredients=request.form["ingredients"],
-        glass=request.form["glass"],
         instructions=request.form["instructions"],
     )
 
@@ -214,7 +213,6 @@ def get_recipe_update_page(recipe_id: int):
     form = RecipeForm(
         title=recipe.title,
         ingredients=recipe.ingredients,
-        glass=recipe.glass,
         instructions=recipe.instructions,
     )
 
@@ -230,7 +228,6 @@ def update_recipe(recipe_id: int):
     form = RecipeForm(
         title=request.form["title"],
         ingredients=request.form["ingredients"],
-        glass=request.form["glass"],
         instructions=request.form["instructions"],
     )
 

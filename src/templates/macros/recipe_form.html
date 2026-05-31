@@ -15,13 +15,6 @@
         {% endif %}
     </p>
     <p>
-        <label for="recipe-glass">Glass</label>
-        <input id="recipe-glass" type="text" name="glass" value="{{form.glass}}" size="20" required />
-        {% if "glass" in validation_errors %}
-        <span>{{validation_errors["glass"]}}</span>
-        {% endif %}
-    </p>
-    <p>
         <label for="recipe-instructions">Instructions</label>
         <textarea id="recipe-instructions" name="instructions" rows="5" cols="40"
             required>{{form.instructions}}</textarea>

@@ -9,7 +9,7 @@ In this application, users can share their cocktail recipes.
   - Each recipe contains
     - a title
     - a list of ingredients
-    - a type of glass
+    - ~~a type of glass~~
     - preparation instructions
 - User can view a list of all recipes that have been created
 - User can add one or more tags to recipes (e.g. sweet, warm, non-alcoholic)
@@ -26,7 +26,7 @@ In this application, users can share their cocktail recipes.
 
 - User can add a picture to a recipe they have created
 - User can filter the list of recipes by
-  - a type of glass
+  - ~~a type of glass~~
   - a user added tag
 - User can sort the list of recipes by
   - creation date

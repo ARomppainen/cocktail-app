@@ -6,7 +6,7 @@ from recipe.model import RecipeForm, Recipe, RecipeSearchItem
 
 
 def get_recipe(recipe_id: int) -> Recipe | None:
-    sql = "SELECT id, user_id, created_at, title, ingredients, glass, instructions FROM recipe WHERE id = ?"
+    sql = "SELECT id, user_id, created_at, title, ingredients, instructions FROM recipe WHERE id = ?"
     result = db.query(sql, [recipe_id])
     return _to_recipe(result[0]) if len(result) else None
 
@@ -26,11 +26,10 @@ def search_recipes(query: str) -> list[RecipeSearchItem]:
         INNER JOIN user ON recipe.user_id = user.id
         WHERE title LIKE ?
         OR ingredients LIKE ?
-        OR glass LIKE ?
         OR instructions LIKE ?
     """
     q = f"%{query}%"
-    result = db.query(sql, [q, q, q, q])
+    result = db.query(sql, [q, q, q])
     return [_to_recipe_search_item(row) for row in result]
 
 
@@ -41,7 +40,6 @@ def _get_recipes() -> list[RecipeSearchItem]:
           recipe.user_id,
           recipe.created_at,
           recipe.title,
-          recipe.glass,
           user.username
         FROM recipe
         INNER JOIN user ON recipe.user_id = user.id
@@ -51,20 +49,17 @@ def _get_recipes() -> list[RecipeSearchItem]:
 
 
 def create_recipe(form: RecipeForm, user_id: int) -> None:
-    sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, glass, instructions) VALUES (?, datetime('now'), ?, ?, ?, ?)"
-    db.execute(
-        sql, [user_id, form.title, form.ingredients, form.glass, form.instructions]
-    )
+    sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, instructions) VALUES (?, datetime('now'), ?, ?, ?)"
+    db.execute(sql, [user_id, form.title, form.ingredients, form.instructions])
 
 
 def update_recipe(form: RecipeForm, user_id: int, recipe_id: int) -> bool:
-    sql = "UPDATE recipe SET title = ?, ingredients = ?, glass = ?, instructions = ? WHERE id = ? AND user_id = ?"
+    sql = "UPDATE recipe SET title = ?, ingredients = ?, instructions = ? WHERE id = ? AND user_id = ?"
     result = db.execute(
         sql,
         [
             form.title,
             form.ingredients,
-            form.glass,
             form.instructions,
             recipe_id,
             user_id,
@@ -85,7 +80,6 @@ def _to_recipe(row: Any) -> Recipe:
         created_at=row["created_at"],
         title=row["title"],
         ingredients=row["ingredients"],
-        glass=row["glass"],
         instructions=row["instructions"],
     )
 

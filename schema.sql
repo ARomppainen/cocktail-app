@@ -10,7 +10,6 @@ CREATE TABLE recipe (
     created_at TEXT NOT NULL,
     title TEXT NOT NULL,
     ingredients TEXT NOT NULL,
-    glass TEXT NOT NULL,
     instructions TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
