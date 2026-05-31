@@ -140,11 +140,7 @@ def get_recipes_page():
     form = RecipeSearchForm(query=request.args.get("query"))
     # TODO: validate query string
 
-    recipes = (
-        recipe_queries.search_recipes(form.query)
-        if form.query
-        else recipe_queries.get_recipes()
-    )
+    recipes = recipe_queries.search_recipes(form.query)
 
     return render_template("recipes.html", form=form, recipes=recipes)
 

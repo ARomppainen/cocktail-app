@@ -2,7 +2,7 @@ import db
 import sqlite3
 from typing import Any
 
-from recipe.model import RecipeForm, Recipe
+from recipe.model import RecipeForm, Recipe, RecipeSearchItem
 
 
 def get_recipe(recipe_id: int) -> Recipe | None:
@@ -11,16 +11,19 @@ def get_recipe(recipe_id: int) -> Recipe | None:
     return _to_recipe(result[0]) if len(result) else None
 
 
-def get_recipes() -> list[Recipe]:
-    sql = "SELECT id, user_id, created_at, title, ingredients, glass, instructions FROM recipe"
-    result = db.query(sql)
-    return [_to_recipe(row) for row in result]
+def search_recipes(query: str) -> list[RecipeSearchItem]:
+    if not query:
+        return _get_recipes()
 
-
-def search_recipes(query: str) -> list[Recipe]:
     sql = """
-        SELECT id, user_id, created_at, title, ingredients, glass, instructions
+        SELECT
+          recipe.id,
+          recipe.user_id,
+          recipe.created_at,
+          recipe.title,
+          user.username
         FROM recipe
+        INNER JOIN user ON recipe.user_id = user.id
         WHERE title LIKE ?
         OR ingredients LIKE ?
         OR glass LIKE ?
@@ -28,7 +31,23 @@ def search_recipes(query: str) -> list[Recipe]:
     """
     q = f"%{query}%"
     result = db.query(sql, [q, q, q, q])
-    return [_to_recipe(row) for row in result]
+    return [_to_recipe_search_item(row) for row in result]
+
+
+def _get_recipes() -> list[RecipeSearchItem]:
+    sql = """
+        SELECT
+          recipe.id,
+          recipe.user_id,
+          recipe.created_at,
+          recipe.title,
+          recipe.glass,
+          user.username
+        FROM recipe
+        INNER JOIN user ON recipe.user_id = user.id
+    """
+    result = db.query(sql)
+    return [_to_recipe_search_item(row) for row in result]
 
 
 def create_recipe(form: RecipeForm, user_id: int) -> None:
@@ -68,4 +87,14 @@ def _to_recipe(row: Any) -> Recipe:
         ingredients=row["ingredients"],
         glass=row["glass"],
         instructions=row["instructions"],
+    )
+
+
+def _to_recipe_search_item(row: Any) -> RecipeSearchItem:
+    return RecipeSearchItem(
+        id=row["id"],
+        user_id=row["user_id"],
+        username=row["username"],
+        created_at=row["created_at"],
+        title=row["title"],
     )

@@ -13,6 +13,15 @@ class Recipe:
 
 
 @dataclass(frozen=True)
+class RecipeSearchItem:
+    id: int
+    user_id: int
+    username: str
+    created_at: str
+    title: str
+
+
+@dataclass(frozen=True)
 class RecipeForm:
     title: str
     ingredients: str
