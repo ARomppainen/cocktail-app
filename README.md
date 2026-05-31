@@ -59,6 +59,11 @@ Install dependencies
 poetry install
 ```
 
+(Optional) Initialize the database with seed data
+```
+poetry run python seed.py
+```
+
 Run the application
 
 ```
@@ -78,6 +83,11 @@ Install dependencies
 
 ```
 pip install -r requirements.txt
+```
+
+(Optional) Initialize the database with seed data
+```
+python3 seed.py
 ```
 
 Run the application
