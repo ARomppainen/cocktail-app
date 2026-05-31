@@ -1,29 +1,29 @@
 {% macro create(form, validation_errors, action) -%}
 <form action="{{action}}" method="post">
     <p>
-        <label for="title">Title</label>
-        <input type="text" name="title" value="{{form.title}}" required />
+        <label for="recipe-title">Title</label>
+        <input id="recipe-title" type="text" name="title" value="{{form.title}}" required />
         {% if "title" in validation_errors %}
         <span>{{validation_errors["title"]}}</span>
         {% endif %}
     </p>
     <p>
-        <label for="title">Ingredients</label>
-        <input type="textarea" name="ingredients" value="{{form.ingredients}}" required />
+        <label for="recipe-ingredients">Ingredients</label>
+        <input id="recipe-ingredients" type="textarea" name="ingredients" value="{{form.ingredients}}" required />
         {% if "ingredients" in validation_errors %}
         <span>{{validation_errors["ingredients"]}}</span>
         {% endif %}
     </p>
     <p>
-        <label for="title">Glass</label>
-        <input type="text" name="glass" value="{{form.glass}}" required />
+        <label for="recipe-glass">Glass</label>
+        <input id="recipe-glass" type="text" name="glass" value="{{form.glass}}" required />
         {% if "glass" in validation_errors %}
         <span>{{validation_errors["glass"]}}</span>
         {% endif %}
     </p>
     <p>
-        <label for="title">Instructions</label>
-        <input type="text" name="instructions" value="{{form.instructions}}" required />
+        <label for="recipe-instructions">Instructions</label>
+        <input id="recipe-instructions" type="text" name="instructions" value="{{form.instructions}}" required />
         {% if "instructions" in validation_errors %}
         <span>{{validation_errors["instructions"]}}</span>
         {% endif %}

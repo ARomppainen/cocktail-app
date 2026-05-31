@@ -4,6 +4,7 @@
 
 <head>
     <title>Cocktail app</title>
+    <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
@@ -12,7 +13,7 @@
 
         <div>
             {% if session.user %}
-            <span>Hello {{ session.user.username }}</span>
+            <p>Hello {{ session.user.username }}</p>
             <form action="/logout" method="post">
                 <input type="submit" value="Log out" />
             </form>
