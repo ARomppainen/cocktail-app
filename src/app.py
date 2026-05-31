@@ -54,8 +54,6 @@ def not_found(error: Any):
 
 @app.route("/", methods=["GET"])
 def get_index_page():
-    if not Session.logged_in():
-        return redirect("/login")
     return render_template("index.html")
 
 
@@ -139,9 +137,6 @@ def register():
 
 @app.route("/recipes", methods=["GET"])
 def get_recipes_page():
-    if not Session.logged_in():
-        return redirect("/login")
-
     form = RecipeSearchForm(query=request.args.get("query"))
     # TODO: validate query string
 
@@ -189,8 +184,6 @@ def create_new_recipe():
 
 @app.route("/recipes/<int:recipe_id>", methods=["GET"])
 def get_recipe_details_page(recipe_id: int):
-    if not Session.logged_in():
-        return redirect("/login")
 
     recipe = recipe_queries.get_recipe(recipe_id)
 

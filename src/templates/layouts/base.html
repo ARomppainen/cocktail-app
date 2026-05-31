@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Cocktail app</title>
+</head>
+
+<body>
+    <header>
+        <h1>Cocktail app</h1>
+
+        <div>
+            {% if session.user %}
+            <span>Hello {{ session.user.username }}</span>
+            <form action="/logout" method="post">
+                <input type="submit" value="Log out" />
+            </form>
+            {% else %}
+            <a href="/login">Log in</a>
+            <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/recipes">Recipes</a></li>
+            {% if session.user %}
+            <li><a href="/recipes/new">New recipe</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main>{% block content %}{% endblock %}</main>
+</body>
+
+</html>

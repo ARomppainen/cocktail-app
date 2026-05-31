@@ -1,22 +1,15 @@
-<!DOCTYPE html>
+{% extends "layouts/base.html" %}
+{% block content %}
+<h2>Recipe details</h2>
+<p>{{recipe.title}}</p>
+<p>{{recipe.ingredients}}</p>
+<p>{{recipe.glass}}</p>
+<p>{{recipe.instructions}}</p>
 
-<html lang="en">
-
-<head>
-    <title>Recipe details</title>
-</head>
-
-<body>
-    <h1>{{recipe.title}}</h1>
-    <p>{{recipe.ingredients}}</p>
-    <p>{{recipe.glass}}</p>
-    <p>{{recipe.instructions}}</p>
-
-    {% if session.user.id == recipe.user_id %}
-    <a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
-    <form action="/recipes/{{recipe.id}}/delete" method="post">
-        <input type="submit" value="Delete recipe" />
-    </form>
-    {% endif %}
-
-</html>
+{% if session.user and session.user.id == recipe.user_id %}
+<a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
+<form action="/recipes/{{recipe.id}}/delete" method="post">
+    <input type="submit" value="Delete recipe" />
+</form>
+{% endif %}
+{% endblock %}

@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <title>Cocktail app</title>
-</head>
-
-<body>
-    <header>
-        <p>Hello {{ session.user.username }}</p>
-        <form action="/logout" method="post">
-            <input type="submit" value="Log out" />
-        </form>
-    </header>
-
-    <main>
-        <h1>Cocktail app</h1>
-
-        <a href="/recipes">View recipes</a>
-        <a href="/recipes/new">Create a new recipe</a>
-    </main>
-</body>
-
-</html>
+{% extends "layouts/base.html" %}
+{% block content %}
+<p>Lorem ipsum dolor sit amet.</p>
+{% endblock %}

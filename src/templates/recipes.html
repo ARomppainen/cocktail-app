@@ -1,35 +1,17 @@
-<!DOCTYPE html>
+{% extends "layouts/base.html" %}
+{% block content %}
+<h2>Recipes</h2>
 
-<html lang="en">
-
-<head>
-    <title>Cocktail app</title>
-</head>
-
-<body>
-    <header>
-        <p>Hello {{ session.user.username }}</p>
-        <form action="/logout" method="post">
-            <input type="submit" value="Log out" />
-        </form>
-    </header>
-
-    <main>
-        <h1>Recipes</h1>
-
-        <form action="/recipes" method="get">
-            <input type="text" name="query" value="{{form.query or ''}}" />
-            <input type="submit" value="Search" />
-        </form>
-        <ul>
-            {% for recipe in recipes %}
-            <li><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></li>
-            {% endfor %}
-        </ul>
-        {% if not recipes %}
-        <p>No recipes found</p>
-        {% endif %}
-    </main>
-</body>
-
-</html>
+<form action="/recipes" method="get">
+    <input type="text" name="query" value="{{form.query or ''}}" />
+    <input type="submit" value="Search" />
+</form>
+<ul>
+    {% for recipe in recipes %}
+    <li><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></li>
+    {% endfor %}
+</ul>
+{% if not recipes %}
+<p>No recipes found</p>
+{% endif %}
+{% endblock %}

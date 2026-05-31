@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <title>Login</title>
-</head>
-
-<body>
-    <h1>Login</h1>
-    <form action="/login" method="post">
-        <div>
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" value="{{form.username}}" required />
-            {% if "username" in validation_errors %}
-            <span>{{validation_errors["username"]}}</span>
-            {% endif %}
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" value="{{form.password}}" required />
-            {% if "password" in validation_errors %}
-            <span>{{validation_errors["password"]}}</span>
-            {% endif %}
-        </div>
-        <input type="submit" value="Submit" />
-        {% if error %}
-        <span>{{error}}</span>
+{% extends "layouts/base.html" %}
+{% block content %}
+<h2>Login</h2>
+<form action="/login" method="post">
+    <div>
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" value="{{form.username}}" required />
+        {% if "username" in validation_errors %}
+        <span>{{validation_errors["username"]}}</span>
         {% endif %}
-    </form>
-    <p>Not registered? Create a <a href="/register">new account</a> instead.</p>
-</body>
-
-</html>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" value="{{form.password}}" required />
+        {% if "password" in validation_errors %}
+        <span>{{validation_errors["password"]}}</span>
+        {% endif %}
+    </div>
+    <input type="submit" value="Submit" />
+    {% if error %}
+    <span>{{error}}</span>
+    {% endif %}
+</form>
+{% endblock %}
