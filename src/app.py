@@ -53,29 +53,19 @@ def not_found(error: Any):
 
 
 @app.route("/", methods=["GET"])
-def get_index():
+def get_index_page():
     if not Session.logged_in():
         return redirect("/login")
-
-    form = RecipeSearchForm(query=request.args.get("query"))
-    # TODO: validate query string
-
-    recipes = (
-        recipe_queries.search_recipes(form.query)
-        if form.query
-        else recipe_queries.get_recipes()
-    )
-
-    return render_template("index.html", form=form, recipes=recipes)
+    return render_template("index.html")
 
 
 @app.route("/login", methods=["GET"])
-def get_login():
+def get_login_page():
     return render_template("login.html", form=LoginForm.empty())
 
 
 @app.route("/login", methods=["POST"])
-def post_login():
+def log_in():
     form = LoginForm(
         username=request.form["username"], password=request.form["password"]
     )
@@ -103,7 +93,7 @@ def post_login():
 
 
 @app.route("/logout", methods=["POST"])
-def post_logout():
+def log_out():
     if not Session.logged_in():
         return redirect("/login")
     Session.log_out()
@@ -111,12 +101,12 @@ def post_logout():
 
 
 @app.route("/register", methods=["GET"])
-def get_register():
+def get_register_page():
     return render_template("register.html", form=CreateUserForm.empty())
 
 
 @app.route("/register", methods=["POST"])
-def post_register():
+def register():
     form = CreateUserForm(
         username=request.form["username"],
         password1=request.form["password1"],
@@ -147,15 +137,32 @@ def post_register():
     return redirect("/")
 
 
-@app.route("/recipe", methods=["GET"])
-def get_new_recipe():
+@app.route("/recipes", methods=["GET"])
+def get_recipes_page():
     if not Session.logged_in():
         return redirect("/login")
-    return render_template("new_recipe.html", form=RecipeForm.empty())
+
+    form = RecipeSearchForm(query=request.args.get("query"))
+    # TODO: validate query string
+
+    recipes = (
+        recipe_queries.search_recipes(form.query)
+        if form.query
+        else recipe_queries.get_recipes()
+    )
+
+    return render_template("recipes.html", form=form, recipes=recipes)
 
 
-@app.route("/recipe", methods=["POST"])
-def post_recipe():
+@app.route("/recipes/new", methods=["GET"])
+def get_new_recipe_page():
+    if not Session.logged_in():
+        return redirect("/login")
+    return render_template("recipe_new.html", form=RecipeForm.empty())
+
+
+@app.route("/recipes/new", methods=["POST"])
+def create_new_recipe():
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
@@ -170,18 +177,18 @@ def post_recipe():
     if validation_errors := form.validate():
         return (
             render_template(
-                "new_recipe.html", form=form, validation_errors=validation_errors
+                "recipe_new.html", form=form, validation_errors=validation_errors
             ),
             BAD_REQUEST,
         )
 
     recipe_queries.create_recipe(form, user["id"])
 
-    return redirect("/")
+    return redirect("/recipes")
 
 
-@app.route("/recipe/<int:recipe_id>", methods=["GET"])
-def get_recipe(recipe_id: int):
+@app.route("/recipes/<int:recipe_id>", methods=["GET"])
+def get_recipe_details_page(recipe_id: int):
     if not Session.logged_in():
         return redirect("/login")
 
@@ -193,8 +200,8 @@ def get_recipe(recipe_id: int):
     return render_template("recipe_details.html", recipe=recipe)
 
 
-@app.route("/recipe/<int:recipe_id>/update", methods=["GET"])
-def get_recipe_update(recipe_id: int):
+@app.route("/recipes/<int:recipe_id>/update", methods=["GET"])
+def get_recipe_update_page(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
@@ -214,11 +221,11 @@ def get_recipe_update(recipe_id: int):
         instructions=recipe.instructions,
     )
 
-    return render_template("recipe_edit.html", recipe_id=recipe_id, form=form)
+    return render_template("recipe_update.html", recipe_id=recipe_id, form=form)
 
 
-@app.route("/recipe/<int:recipe_id>/update", methods=["POST"])
-def post_recipe_update(recipe_id: int):
+@app.route("/recipes/<int:recipe_id>/update", methods=["POST"])
+def update_recipe(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
@@ -246,15 +253,15 @@ def post_recipe_update(recipe_id: int):
     if not found:
         abort(NOT_FOUND)
 
-    return redirect(f"/recipe/{recipe_id}")
+    return redirect(f"/recipes/{recipe_id}")
 
 
-@app.route("/recipe/<int:recipe_id>/delete", methods=["POST"])
-def post_recipe_delete(recipe_id: int):
+@app.route("/recipes/<int:recipe_id>/delete", methods=["POST"])
+def delete_recipe(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
 
     recipe_queries.delete_recipe(user["id"], recipe_id)
 
-    return redirect("/")
+    return redirect("/recipes")

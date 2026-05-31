@@ -15,22 +15,10 @@
     </header>
 
     <main>
-        <h1>Recipes</h1>
+        <h1>Cocktail app</h1>
 
-        <a href="/recipe">Create a new recipe</a>
-
-        <form action="/" method="get">
-            <input type="text" name="query" value="{{form.query or ''}}" />
-            <input type="submit" value="Search" />
-        </form>
-        <ul>
-            {% for recipe in recipes %}
-            <li><a href="/recipe/{{recipe.id}}">{{recipe.title}}</a></li>
-            {% endfor %}
-        </ul>
-        {% if not recipes %}
-        <p>No recipes found</p>
-        {% endif %}
+        <a href="/recipes">View recipes</a>
+        <a href="/recipes/new">Create a new recipe</a>
     </main>
 </body>
 

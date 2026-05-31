@@ -3,12 +3,12 @@
 <html lang="en">
 
 <head>
-    <title>New recipe</title>
+    <title>Edit recipe</title>
 </head>
 
 <body>
-    <h1>New recipe</h1>
-    <form action="/recipe" method="post">
+    <h1>Edit recipe</h1>
+    <form action="/recipes/{{recipe_id}}/update" method="post">
         <p>
             <label for="title">Title</label>
             <input type="text" name="title" value="{{form.title}}" required />
