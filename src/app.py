@@ -3,6 +3,7 @@ from typing import Any
 
 from flask import Flask
 from flask import abort, redirect, render_template, request, session
+import markupsafe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from recipe.model import RecipeForm, RecipeSearchForm
@@ -45,6 +46,13 @@ class Session:
     @staticmethod
     def get_logged_in_user() -> LoggedInUser | None:
         return session["user"] if "user" in session else None
+
+
+@app.template_filter()
+def show_lines(content: str) -> markupsafe.Markup:
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 
 @app.errorhandler(NOT_FOUND)

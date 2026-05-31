@@ -2,9 +2,9 @@
 {% block content %}
 <h2>Recipe details</h2>
 <p>{{recipe.title}}</p>
-<p>{{recipe.ingredients}}</p>
+<p>{{recipe.ingredients | show_lines}}</p>
 <p>{{recipe.glass}}</p>
-<p>{{recipe.instructions}}</p>
+<p>{{recipe.instructions | show_lines}}</p>
 
 {% if session.user and session.user.id == recipe.user_id %}
 <a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
