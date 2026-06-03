@@ -96,9 +96,10 @@ def _get_recipes() -> list[RecipeSearchItem]:
     return [_to_recipe_search_item(row) for row in result]
 
 
-def create_recipe(form: RecipeForm, user_id: int) -> None:
+def create_recipe(form: RecipeForm, user_id: int) -> int:
     sql = "INSERT INTO recipe (user_id, created_at, title, ingredients, instructions) VALUES (?, datetime('now'), ?, ?, ?)"
-    db.execute(sql, [user_id, form.title, form.ingredients, form.instructions])
+    result = db.execute(sql, [user_id, form.title, form.ingredients, form.instructions])
+    return result.lastrowid
 
 
 def update_recipe(form: RecipeForm, user_id: int, recipe_id: int) -> bool:

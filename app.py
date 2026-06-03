@@ -172,9 +172,9 @@ def create_new_recipe():
             BAD_REQUEST,
         )
 
-    recipes.create_recipe(form, user["id"])
+    recipe_id = recipes.create_recipe(form, user["id"])
 
-    return redirect("/recipes")
+    return redirect(f"/recipes/{recipe_id}")
 
 
 @app.route("/recipes/<int:recipe_id>", methods=["GET"])
