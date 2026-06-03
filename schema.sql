@@ -19,6 +19,7 @@ CREATE TABLE review (
     user_id INTEGER NOT NULL,
     recipe_id INTEGER NOT NULL,
     created_at TEXT NOT NULL,
+    title TEXT NOT NULL,
     content TEXT NOT NULL,
     rating INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id),

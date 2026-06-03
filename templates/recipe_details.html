@@ -11,4 +11,32 @@
     <input type="submit" value="Delete recipe" />
 </form>
 {% endif %}
+<h2>Reviews</h2>
+{% if session.user and session.user.id != recipe.user_id %}
+{% if user_review %}
+<p>You have written the following review:</p>
+<h3>{{user_review.title}}</h3>
+<p>{{user_review.content | show_lines}}</p>
+<a href="/recipes/{{recipe.id}}/reviews/update">Edit your review</a>
+{% else %}
+<a href="/recipes/{{recipe.id}}/reviews/new">Write a review</a>
+{% endif %}
+{% endif %}
+
+{% if reviews %}
+<ul>
+    {% for review in reviews %}
+    <li>
+        <h3>{{review.title}}</h3>
+        <p>{{review.content | show_lines}}</p>
+        <!-- TODO: render the rating -->
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if not reviews and not user_review %}
+<p>No reviews found.</p>
+{% endif %}
+
 {% endblock %}

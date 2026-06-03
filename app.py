@@ -7,6 +7,7 @@ import markupsafe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import recipes
+import reviews
 import users
 
 app = Flask(__name__)
@@ -185,7 +186,20 @@ def get_recipe_details_page(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    return render_template("recipe_details.html", recipe=recipe)
+    user = Session.get_logged_in_user()
+    user_id = user["id"] if user else None
+
+    found_reviews = reviews.get_reviews(recipe_id, user_id)
+    user_review = (
+        reviews.get_review_by_user(recipe_id, user_id) if user_id is not None else None
+    )
+
+    return render_template(
+        "recipe_details.html",
+        recipe=recipe,
+        reviews=found_reviews,
+        user_review=user_review,
+    )
 
 
 @app.route("/recipes/<int:recipe_id>/update", methods=["GET"])
