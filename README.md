@@ -67,7 +67,7 @@ poetry run python seed.py
 Run the application
 
 ```
-poetry run flask --app src/app run
+poetry run flask run
 ```
 
 ### Option 2: Without Poetry
@@ -93,5 +93,5 @@ python3 seed.py
 Run the application
 
 ```
-flask --app src/app run
+flask run
 ```

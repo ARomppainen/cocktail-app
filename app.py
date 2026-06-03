@@ -6,16 +6,8 @@ from flask import abort, redirect, render_template, request, session
 import markupsafe
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from recipe.model import RecipeForm, RecipeSearchForm
-import recipe.queries as recipe_queries
-from user.model import (
-    CreateUserForm,
-    LoggedInUser,
-    LoginForm,
-    User,
-    UsernameNotAvailableError,
-)
-from user.queries import create_user, get_user
+import recipes
+import users
 
 app = Flask(__name__)
 
@@ -32,8 +24,8 @@ NOT_FOUND = 404
 class Session:
 
     @staticmethod
-    def log_in(user: User) -> None:
-        session["user"] = LoggedInUser(id=user.id, username=user.username)
+    def log_in(user: users.User) -> None:
+        session["user"] = users.LoggedInUser(id=user.id, username=user.username)
 
     @staticmethod
     def logged_in() -> bool:
@@ -44,7 +36,7 @@ class Session:
         del session["user"]
 
     @staticmethod
-    def get_logged_in_user() -> LoggedInUser | None:
+    def get_logged_in_user() -> users.LoggedInUser | None:
         return session["user"] if "user" in session else None
 
 
@@ -67,12 +59,12 @@ def get_index_page():
 
 @app.route("/login", methods=["GET"])
 def get_login_page():
-    return render_template("login.html", form=LoginForm.empty())
+    return render_template("login.html", form=users.LoginForm.empty())
 
 
 @app.route("/login", methods=["POST"])
 def log_in():
-    form = LoginForm(
+    form = users.LoginForm(
         username=request.form["username"], password=request.form["password"]
     )
 
@@ -84,7 +76,7 @@ def log_in():
             BAD_REQUEST,
         )
 
-    user = get_user(form.username)
+    user = users.get_user(form.username)
 
     if not user or not check_password_hash(user.password_hash, form.password):
         return (
@@ -108,12 +100,12 @@ def log_out():
 
 @app.route("/register", methods=["GET"])
 def get_register_page():
-    return render_template("register.html", form=CreateUserForm.empty())
+    return render_template("register.html", form=users.CreateUserForm.empty())
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    form = CreateUserForm(
+    form = users.CreateUserForm(
         username=request.form["username"],
         password1=request.form["password1"],
         password2=request.form["password2"],
@@ -128,8 +120,8 @@ def register():
         )
 
     try:
-        user = create_user(form.username, generate_password_hash(form.password1))
-    except UsernameNotAvailableError:
+        user = users.create_user(form.username, generate_password_hash(form.password1))
+    except users.UsernameNotAvailableError:
         return (
             render_template(
                 "register.html",
@@ -145,19 +137,19 @@ def register():
 
 @app.route("/recipes", methods=["GET"])
 def get_recipes_page():
-    form = RecipeSearchForm(query=request.args.get("query"))
+    form = recipes.RecipeSearchForm(query=request.args.get("query"))
     # TODO: validate query string
 
-    recipes = recipe_queries.search_recipes(form.query)
+    search_result = recipes.search_recipes(form.query)
 
-    return render_template("recipes.html", form=form, recipes=recipes)
+    return render_template("recipes.html", form=form, recipes=search_result)
 
 
 @app.route("/recipes/new", methods=["GET"])
 def get_new_recipe_page():
     if not Session.logged_in():
         return redirect("/login")
-    return render_template("recipe_new.html", form=RecipeForm.empty())
+    return render_template("recipe_new.html", form=recipes.RecipeForm.empty())
 
 
 @app.route("/recipes/new", methods=["POST"])
@@ -166,7 +158,7 @@ def create_new_recipe():
     if not user:
         return redirect("/login")
 
-    form = RecipeForm(
+    form = recipes.RecipeForm(
         title=request.form["title"],
         ingredients=request.form["ingredients"],
         instructions=request.form["instructions"],
@@ -180,7 +172,7 @@ def create_new_recipe():
             BAD_REQUEST,
         )
 
-    recipe_queries.create_recipe(form, user["id"])
+    recipes.create_recipe(form, user["id"])
 
     return redirect("/recipes")
 
@@ -188,7 +180,7 @@ def create_new_recipe():
 @app.route("/recipes/<int:recipe_id>", methods=["GET"])
 def get_recipe_details_page(recipe_id: int):
 
-    recipe = recipe_queries.get_recipe(recipe_id)
+    recipe = recipes.get_recipe(recipe_id)
 
     if not recipe:
         abort(NOT_FOUND)
@@ -202,7 +194,7 @@ def get_recipe_update_page(recipe_id: int):
     if not user:
         return redirect("/login")
 
-    recipe = recipe_queries.get_recipe(recipe_id)
+    recipe = recipes.get_recipe(recipe_id)
 
     if not recipe:
         abort(NOT_FOUND)
@@ -210,7 +202,7 @@ def get_recipe_update_page(recipe_id: int):
     if user["id"] != recipe.user_id:
         abort(NOT_FOUND)
 
-    form = RecipeForm(
+    form = recipes.RecipeForm(
         title=recipe.title,
         ingredients=recipe.ingredients,
         instructions=recipe.instructions,
@@ -225,7 +217,7 @@ def update_recipe(recipe_id: int):
     if not user:
         return redirect("/login")
 
-    form = RecipeForm(
+    form = recipes.RecipeForm(
         title=request.form["title"],
         ingredients=request.form["ingredients"],
         instructions=request.form["instructions"],
@@ -242,7 +234,7 @@ def update_recipe(recipe_id: int):
             BAD_REQUEST,
         )
 
-    found = recipe_queries.update_recipe(form, user["id"], recipe_id)
+    found = recipes.update_recipe(form, user["id"], recipe_id)
 
     if not found:
         abort(NOT_FOUND)
@@ -256,6 +248,6 @@ def delete_recipe(recipe_id: int):
     if not user:
         return redirect("/login")
 
-    recipe_queries.delete_recipe(user["id"], recipe_id)
+    recipes.delete_recipe(user["id"], recipe_id)
 
     return redirect("/recipes")

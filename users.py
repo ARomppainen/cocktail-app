@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+import sqlite3
 from typing import TypedDict
+
+import db
 
 
 class LoggedInUser(TypedDict):
@@ -64,3 +67,26 @@ class CreateUserForm:
 
 class UsernameNotAvailableError(RuntimeError):
     pass
+
+
+def get_user(username: str) -> User | None:
+    sql = "SELECT id, username, password_hash FROM user WHERE username = ?"
+    result = db.query(sql, [username])
+    if not result:
+        return None
+    row = result[0]
+    return User(
+        id=row["id"], username=row["username"], password_hash=row["password_hash"]
+    )
+
+
+def create_user(username: str, password_hash: str) -> User:
+    sql = "INSERT INTO user (username, password_hash) VALUES (?, ?)"
+    try:
+        result = db.execute(
+            sql,
+            [username, password_hash],
+        )
+        return User(id=result.lastrowid, username=username, password_hash=password_hash)
+    except sqlite3.IntegrityError as err:
+        raise UsernameNotAvailableError from err
