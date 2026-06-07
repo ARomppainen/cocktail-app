@@ -265,3 +265,62 @@ def delete_recipe(recipe_id: int):
     recipes.delete_recipe(user["id"], recipe_id)
 
     return redirect("/recipes")
+
+
+@app.route("/recipes/<int:recipe_id>/reviews/new", methods=["GET"])
+def get_new_review_page(recipe_id: int):
+    user = Session.get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    if reviews.get_review_by_user(recipe_id, user["id"]):
+        abort(BAD_REQUEST)
+
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(NOT_FOUND)
+
+    if recipe.user_id == user["id"]:
+        abort(BAD_REQUEST)
+
+    return render_template(
+        "review_new.html",
+        recipe_id=recipe_id,
+        recipe=recipe,
+        form=reviews.ReviewForm.empty(),
+    )
+
+
+@app.route("/recipes/<int:recipe_id>/reviews/new", methods=["POST"])
+def create_new_review(recipe_id: int):
+    user = Session.get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    if reviews.get_review_by_user(recipe_id, user["id"]):
+        abort(BAD_REQUEST)
+
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(NOT_FOUND)
+
+    if recipe.user_id == user["id"]:
+        abort(BAD_REQUEST)
+
+    form, validation_errors = reviews.ReviewForm.parse(request.form)
+
+    if validation_errors:
+        return (
+            render_template(
+                "review_new.html",
+                recipe_id=recipe_id,
+                recipe=recipe,
+                form=form,
+                validation_errors=validation_errors,
+            ),
+            BAD_REQUEST,
+        )
+
+    reviews.create_review(form, user["id"], recipe_id)
+
+    return redirect(f"/recipes/{recipe_id}")

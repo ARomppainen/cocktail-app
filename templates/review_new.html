@@ -1,0 +1,10 @@
+{% extends "layouts/base.html" %}
+{% import 'macros/review_form.html' as review_form %}
+{% block content %}
+<h2>Recipe details</h2>
+<p>{{recipe.title}}</p>
+<p>{{recipe.ingredients | show_lines}}</p>
+<p>{{recipe.instructions | show_lines}}</p>
+<h2>New review</h2>
+{{ review_form.create(form, validation_errors, "/recipes/" ~ recipe_id ~ "/reviews/new") }}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% macro create(form, validation_errors, action) -%}
+<form action="{{action}}" method="post">
+    <p>
+        <label for="review-title">Title</label>
+        <input id="review-title" type="text" name="title" value="{{form.title}}" size="40" required />
+        {% if "title" in validation_errors %}
+        <span>{{validation_errors["title"]}}</span>
+        {% endif %}
+    </p>
+    <p>
+        <label for="review-content">Content</label>
+        <textarea id="review-content" name="content" rows="5" cols="40" required>{{form.content}}</textarea>
+        {% if "content" in validation_errors %}
+        <span>{{validation_errors["content"]}}</span>
+        {% endif %}
+    </p>
+    <p>
+        <legend>Rating</legend>
+    <div>
+        {% for rating in [1,2,3,4,5] %}
+        <div>
+            {% if form.rating == rating %}
+            <input id="review-rating-{{rating}}" type="radio" name="rating" value="{{rating}}" required checked />
+            {% else %}
+            <input id="review-rating-{{rating}}" type="radio" name="rating" value="{{rating}}" required />
+            {% endif %}
+
+            <label for="review-rating-{{rating}}" class="inline">{{'*' * rating}}</label>
+        </div>
+        {% endfor %}
+    </div>
+    </p>
+    <input type="submit" value="Submit" />
+</form>
+{%- endmacro %}

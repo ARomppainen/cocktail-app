@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+from werkzeug.datastructures import ImmutableMultiDict
+
 import db
 
 
@@ -12,6 +14,31 @@ class Review:
     created_at: str
     content: str
     rating: int
+
+
+@dataclass(frozen=True)
+class ReviewForm:
+    title: str
+    content: str
+    rating: int
+
+    @staticmethod
+    def empty() -> "ReviewForm":
+        return ReviewForm("", "", 0)
+
+    @staticmethod
+    def parse(
+        form: ImmutableMultiDict[str, str],
+    ) -> tuple["ReviewForm", dict[str, str]]:
+        errors: dict[str, str] = {}
+
+        title = form["title"]
+        content = form["content"]
+        rating = form.get("rating", type=int)
+
+        # TODO: Add validation
+
+        return ReviewForm(title=title, content=content, rating=rating), errors
 
 
 def get_reviews(recipe_id: int, exclude_user_id: int | None) -> list[Review]:
@@ -55,6 +82,24 @@ def get_review_by_user(recipe_id: int, user_id: int) -> Review | None:
     """
     result = db.query(sql, [recipe_id, user_id])
     return _to_review(result[0]) if result else None
+
+
+def create_review(form: ReviewForm, user_id: int, recipe_id: int) -> int:
+    sql = """
+        INSERT INTO review (
+            user_id,
+            recipe_id,
+            created_at,
+            title,
+            content,
+            rating
+        )
+        VALUES (?, ?, datetime('now'), ?, ?, ?)
+    """
+    result = db.execute(
+        sql, [user_id, recipe_id, form.title, form.content, form.rating]
+    )
+    return result.lastrowid
 
 
 def _to_review(row: Any) -> Review:

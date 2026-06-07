@@ -1,3 +1,7 @@
 label {
     display: block;
 }
+
+label.inline {
+    display: inline;
+}
