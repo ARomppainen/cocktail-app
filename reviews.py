@@ -12,6 +12,7 @@ class Review:
     user_id: int
     username: str
     created_at: str
+    title: str
     content: str
     rating: int
 
@@ -102,12 +103,28 @@ def create_review(form: ReviewForm, user_id: int, recipe_id: int) -> int:
     return result.lastrowid
 
 
+def update_review(form: ReviewForm, user_id: int, recipe_id: int) -> bool:
+    sql = """
+        UPDATE review SET
+            title = ?,
+            content = ?,
+            rating = ?
+        WHERE user_id = ?
+        AND recipe_id = ?
+    """
+    result = db.execute(
+        sql, [form.title, form.content, form.rating, user_id, recipe_id]
+    )
+    return bool(result.rowcount)
+
+
 def _to_review(row: Any) -> Review:
     return Review(
         id=row["id"],
         user_id=row["user_id"],
         username=row["username"],
         created_at=row["created_at"],
+        title=row["title"],
         content=row["content"],
         rating=row["rating"],
     )

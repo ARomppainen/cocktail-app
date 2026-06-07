@@ -17,9 +17,9 @@
 <p>You have written the following review:</p>
 <h3>{{user_review.title}}</h3>
 <p>{{user_review.content | show_lines}}</p>
-<a href="/recipes/{{recipe.id}}/reviews/update">Edit your review</a>
+<a href="/recipes/{{recipe.id}}/review/update">Edit your review</a>
 {% else %}
-<a href="/recipes/{{recipe.id}}/reviews/new">Write a review</a>
+<a href="/recipes/{{recipe.id}}/review/new">Write a review</a>
 {% endif %}
 {% endif %}
 

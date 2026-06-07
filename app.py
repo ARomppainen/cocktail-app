@@ -267,7 +267,7 @@ def delete_recipe(recipe_id: int):
     return redirect("/recipes")
 
 
-@app.route("/recipes/<int:recipe_id>/reviews/new", methods=["GET"])
+@app.route("/recipes/<int:recipe_id>/review/new", methods=["GET"])
 def get_new_review_page(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
@@ -291,7 +291,7 @@ def get_new_review_page(recipe_id: int):
     )
 
 
-@app.route("/recipes/<int:recipe_id>/reviews/new", methods=["POST"])
+@app.route("/recipes/<int:recipe_id>/review/new", methods=["POST"])
 def create_new_review(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
@@ -322,5 +322,67 @@ def create_new_review(recipe_id: int):
         )
 
     reviews.create_review(form, user["id"], recipe_id)
+
+    return redirect(f"/recipes/{recipe_id}")
+
+
+@app.route("/recipes/<int:recipe_id>/review/update", methods=["GET"])
+def get_review_update_page(recipe_id: int):
+    user = Session.get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(NOT_FOUND)
+
+    if recipe.user_id == user["id"]:
+        abort(BAD_REQUEST)
+
+    review = reviews.get_review_by_user(recipe_id, user["id"])
+    if not review:
+        abort(NOT_FOUND)
+
+    form = reviews.ReviewForm(
+        title=review.title, content=review.content, rating=review.rating
+    )
+
+    return render_template(
+        "review_update.html",
+        recipe_id=recipe_id,
+        recipe=recipe,
+        form=form,
+    )
+
+
+@app.route("/recipes/<int:recipe_id>/review/update", methods=["POST"])
+def update_review(recipe_id: int):
+    user = Session.get_logged_in_user()
+    if not user:
+        return redirect("/login")
+
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(NOT_FOUND)
+
+    if recipe.user_id == user["id"]:
+        abort(BAD_REQUEST)
+
+    form, validation_errors = reviews.ReviewForm.parse(request.form)
+    if validation_errors:
+        return (
+            render_template(
+                "review_update.html",
+                recipe_id=recipe_id,
+                recipe=recipe,
+                form=form,
+                validation_errors=validation_errors,
+            ),
+            BAD_REQUEST,
+        )
+
+    found = reviews.update_review(form, user["id"], recipe_id)
+    if not found:
+        abort(NOT_FOUND)
 
     return redirect(f"/recipes/{recipe_id}")

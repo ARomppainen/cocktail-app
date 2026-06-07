@@ -5,6 +5,6 @@
 <p>{{recipe.title}}</p>
 <p>{{recipe.ingredients | show_lines}}</p>
 <p>{{recipe.instructions | show_lines}}</p>
-<h2>New review</h2>
-{{ review_form.create(form, validation_errors, "/recipes/" ~ recipe_id ~ "/review/new") }}
+<h2>Edit review</h2>
+{{ review_form.create(form, validation_errors, "/recipes/" ~ recipe_id ~ "/review/update") }}
 {% endblock %}
