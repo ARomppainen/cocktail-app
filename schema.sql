@@ -26,6 +26,8 @@ CREATE TABLE review (
     FOREIGN KEY (recipe_id) REFERENCES recipe (id)
 );
 
+CREATE UNIQUE INDEX idx_review_user_recipe ON review (user_id, recipe_id);
+
 CREATE TABLE tag (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE NOT NULL
