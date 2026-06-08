@@ -5,3 +5,7 @@ label {
 label.inline {
     display: inline;
 }
+
+li.user-review {
+    list-style-type: none;
+}

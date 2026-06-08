@@ -77,7 +77,7 @@ def log_in():
             BAD_REQUEST,
         )
 
-    user = users.get_user(form.username)
+    user = users.get_user_by_name(form.username)
 
     if not user or not check_password_hash(user.password_hash, form.password):
         return (
@@ -386,3 +386,24 @@ def update_review(recipe_id: int):
         abort(NOT_FOUND)
 
     return redirect(f"/recipes/{recipe_id}")
+
+
+@app.route("/users/<int:user_id>", methods=["GET"])
+def get_user_details_page(user_id: int):
+    user = users.get_user(user_id)
+    if not user:
+        abort(NOT_FOUND)
+
+    user_recipes = recipes.get_recipes_by_user(user_id)
+    user_reviews = reviews.get_reviews_by_user(user_id)
+    recipe_count = len(user_recipes)
+    review_count = len(user_reviews)
+
+    return render_template(
+        "user_details.html",
+        user=user,
+        recipes=user_recipes,
+        reviews=user_reviews,
+        recipe_count=recipe_count,
+        review_count=review_count,
+    )

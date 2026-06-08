@@ -17,7 +17,7 @@
         {% for recipe in recipes %}
         <tr>
             <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
-            <td>{{recipe.username}}</td>
+            <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
             <td>{{recipe.created_at}}</td>
         </tr>
         {% endfor %}

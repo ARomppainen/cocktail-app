@@ -59,6 +59,23 @@ def get_recipe(recipe_id: int) -> Recipe | None:
     return _to_recipe(result[0]) if len(result) else None
 
 
+def get_recipes_by_user(user_id: int) -> list[Recipe]:
+    sql = """
+        SELECT
+            id,
+            user_id,
+            created_at,
+            title,
+            ingredients,
+            instructions
+        FROM recipe
+        WHERE user_id = ?
+        ORDER BY datetime(created_at) DESC
+    """
+    result = db.query(sql, [user_id])
+    return [_to_recipe(row) for row in result]
+
+
 def search_recipes(query: str) -> list[RecipeSearchItem]:
     if not query:
         return _get_recipes()

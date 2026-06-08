@@ -18,6 +18,16 @@ class Review:
 
 
 @dataclass(frozen=True)
+class UserReview:
+    created_at: str
+    title: str
+    content: str
+    rating: int
+    recipe_id: int
+    recipe_title: str
+
+
+@dataclass(frozen=True)
 class ReviewForm:
     title: str
     content: str
@@ -64,6 +74,24 @@ def get_reviews(recipe_id: int, exclude_user_id: int | None) -> list[Review]:
 
     result = db.query(sql, params)
     return [_to_review(row) for row in result]
+
+
+def get_reviews_by_user(user_id: int) -> list[UserReview]:
+    sql = """
+        SELECT
+            review.created_at,
+            review.title,
+            review.content,
+            review.rating,
+            recipe.id as recipe_id,
+            recipe.title as recipe_title
+        FROM review
+        INNER JOIN recipe ON review.recipe_id = recipe.id
+        WHERE review.recipe_id = ?
+        ORDER BY datetime(review.created_at) DESC
+    """
+    result = db.query(sql, [user_id])
+    return [_to_user_review(row) for row in result]
 
 
 def get_review_by_user(recipe_id: int, user_id: int) -> Review | None:
@@ -127,4 +155,15 @@ def _to_review(row: Any) -> Review:
         title=row["title"],
         content=row["content"],
         rating=row["rating"],
+    )
+
+
+def _to_user_review(row: Any) -> UserReview:
+    return UserReview(
+        created_at=row["created_at"],
+        title=row["title"],
+        content=row["content"],
+        rating=row["rating"],
+        recipe_id=row["recipe_id"],
+        recipe_title=row["recipe_title"],
     )

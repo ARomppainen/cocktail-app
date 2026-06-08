@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<article>
+    <h2>User details: {{user.username}}</h2>
+    <section>
+        <h3>Recipes by {{user.username}}</h3>
+        {% if recipe_count == 0 %}
+        <p>{{user.username}} has not created any recipes.</p>
+        {% endif %}
+        {% if recipe_count == 1 %}
+        <p>{{user.username}} has created one recipe.</p>
+        {% endif %}
+        {% if recipe_count > 1 %}
+        <p>{{user.username}} has created {{recipe_count}} recipes.</p>
+        {% endif %}
+        {% if recipes %}
+        <ul>
+            {% for recipe in recipes %}
+            <li><a href="{{'/recipes/' ~ recipe.id}}">{{recipe.title}}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+    <section>
+        <h3>Reviews by {{user.username}}</h3>
+        {% if review_count == 0 %}
+        <p>{{user.username}} has not written any reviews.</p>
+        {% endif %}
+        {% if review_count == 1 %}
+        <p>{{user.username}} has written one review.</p>
+        {% endif %}
+        {% if review_count > 1 %}
+        <p>{{user.username}} has written {{review_count}} reviews.</p>
+        {% endif %}
+        {% if reviews %}
+        <ul>
+            {% for review in reviews %}
+            <li class="user-review">
+                <details>
+                    <summary><a href="{{'/recipes/' ~ review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}
+                    </summary>
+                    <p>{{review.content}}</p>
+                </details>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

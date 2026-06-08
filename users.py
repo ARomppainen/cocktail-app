@@ -69,7 +69,18 @@ class UsernameNotAvailableError(RuntimeError):
     pass
 
 
-def get_user(username: str) -> User | None:
+def get_user(user_id: int) -> User | None:
+    sql = "SELECT id, username, password_hash FROM user WHERE id = ?"
+    result = db.query(sql, [user_id])
+    if not result:
+        return None
+    row = result[0]
+    return User(
+        id=row["id"], username=row["username"], password_hash=row["password_hash"]
+    )
+
+
+def get_user_by_name(username: str) -> User | None:
     sql = "SELECT id, username, password_hash FROM user WHERE username = ?"
     result = db.query(sql, [username])
     if not result:
