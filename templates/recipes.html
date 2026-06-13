@@ -1,30 +1,53 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<h2>Recipes</h2>
+<section>
+    <h2>Recipes</h2>
 
-<form action="/recipes" method="get">
-    <input type="text" name="query" value="{{form.query or ''}}" />
-    <input type="submit" value="Search" />
-</form>
-{% if recipes %}
-<table>
-    <thead>
-        <th scope="col">Title</th>
-        <th scope="col">Created by</th>
-        <th scope="col">Created at</th>
-        <th scope="col">Tags</th>
-    </thead>
-    <tbody>
-        {% for recipe in recipes %}
-        <tr>
-            <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
-            <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
-            <td>{{recipe.created_at}}</td>
-            <td>{{recipe.tags if recipe.tags else ''}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <form action="/recipes" method="get">
+        <input type="text" name="query" value="{{form.query or ''}}" />
+        <input type="submit" value="Search" />
+    </form>
+    {% if recipes %}
+    <table>
+        <thead>
+            <th scope="col">Title</th>
+            <th scope="col">Created by</th>
+            <th scope="col">Created at</th>
+            <th scope="col">Tags</th>
+        </thead>
+        <tbody>
+            {% for recipe in recipes %}
+            <tr>
+                <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
+                <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
+                <td>{{recipe.created_at}}</td>
+                <td>{{recipe.tags if recipe.tags else ''}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination-ctrls">
+            <li class="pagination-ctrl"><a href="?query={{form.query or ''}}&page=1">First</a></li>
+            <li class="pagination-ctrl">
+                {% if page > 1 %}
+                <a href="?query={{form.query or ''}}&page={{page-1}}">Prev</a>
+                {% else %}
+                <span>Prev</span>
+                {% endif %}
+            </li>
+            <li class="pagination-ctrl"><span>{{page}} / {{page_count}}</span></li>
+            <li class="pagination-ctrl">
+                {% if page_count > page %}
+                <a href="?query={{form.query or ''}}&page={{page+1}}">Next</a>
+                {% else %}
+                <span>Next</span>
+                {% endif %}
+            </li>
+            <li class="pagination-ctrl"><a href="?query={{form.query or ''}}&page={{page_count}}">Last</a></li>
+        </ul>
+    </nav>
+</section>
 {% else %}
 <p>No recipes found</p>
 {% endif %}

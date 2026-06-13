@@ -14,3 +14,13 @@ label.inline {
 li.user-review {
     list-style-type: none;
 }
+
+li.pagination-ctrl {
+    list-style-type: none
+}
+
+ul.pagination-ctrls {
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+}

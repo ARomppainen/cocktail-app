@@ -153,9 +153,18 @@ def get_recipes_page():
     form = recipes.RecipeSearchForm(query=request.args.get("query"))
     # TODO: validate query string
 
-    search_result = recipes.search_recipes(form.query)
+    page = max(1, request.args.get("page", default=1, type=int))
+    page_size = 20
+    search_result = recipes.search_recipes(form.query, page, page_size)
 
-    return render_template("recipes.html", form=form, recipes=search_result)
+    return render_template(
+        "recipes.html",
+        form=form,
+        recipes=search_result.items,
+        page=search_result.page,
+        page_count=search_result.page_count,
+        page_size=search_result.page_size,
+    )
 
 
 @app.route("/recipes/new", methods=["GET"])

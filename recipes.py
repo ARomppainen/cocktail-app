@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 from typing import Any
 
 from werkzeug.datastructures import ImmutableMultiDict
@@ -26,6 +27,14 @@ class RecipeSearchItem:
     created_at: str
     title: str
     tags: str
+
+
+@dataclass(frozen=True)
+class RecipeSearchResult:
+    page: int
+    page_count: int
+    page_size: int
+    items: list[RecipeSearchItem]
 
 
 @dataclass(frozen=True)
@@ -123,8 +132,12 @@ def get_recipes_by_user(user_id: int) -> list[Recipe]:
     return [_to_recipe(row) for row in result]
 
 
-def search_recipes(query: str) -> list[RecipeSearchItem]:
-    sql = """
+def search_recipes(query: str, page: int, page_size: int) -> RecipeSearchResult:
+    count_sql = """
+        SELECT count(id) as row_count
+        FROM recipe
+    """
+    search_sql = """
         SELECT
             recipe.id,
             recipe.user_id,
@@ -137,24 +150,36 @@ def search_recipes(query: str) -> list[RecipeSearchItem]:
         LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
         LEFT JOIN tag ON recipe_tag.tag_id = tag.id
     """
+    filter_sql = """
+        WHERE title LIKE ?
+        OR ingredients LIKE ?
+        OR instructions LIKE ?
+    """
 
     params = []
     if query:
-        sql += """
-            WHERE title LIKE ?
-            OR ingredients LIKE ?
-            OR instructions LIKE ?
-        """
+        count_sql += filter_sql
+        search_sql += filter_sql
         q = f"%{query}%"
         params = [q, q, q]
 
-    sql += """
+    row_count = db.query(count_sql, params)[0]["row_count"]
+    page_count = math.ceil(row_count / page_size)
+
+    search_sql += """
         GROUP BY recipe.id
         ORDER BY recipe.title
+        LIMIT ? OFFSET ?
     """
+    params.append(page_size)
+    params.append((page - 1) * page_size)
 
-    result = db.query(sql, params)
-    return [_to_recipe_search_item(row) for row in result]
+    result = db.query(search_sql, params)
+    items = [_to_recipe_search_item(row) for row in result]
+
+    return RecipeSearchResult(
+        page=page, page_count=page_count, page_size=page_size, items=items
+    )
 
 
 def create_recipe(form: RecipeForm, user_id: int) -> int:
