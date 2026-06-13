@@ -1,4 +1,5 @@
 import os
+import secrets
 from typing import Any
 
 from flask import Flask
@@ -20,6 +21,7 @@ if not (SECRET_KEY := os.environ.get("SECRET_KEY")):
 app.secret_key = SECRET_KEY
 
 BAD_REQUEST = 400
+FORBIDDEN = 403
 NOT_FOUND = 404
 
 
@@ -28,6 +30,7 @@ class Session:
     @staticmethod
     def log_in(user: users.User) -> None:
         session["user"] = users.LoggedInUser(id=user.id, username=user.username)
+        session["csrf_token"] = secrets.token_hex(16)
 
     @staticmethod
     def logged_in() -> bool:
@@ -40,6 +43,13 @@ class Session:
     @staticmethod
     def get_logged_in_user() -> users.LoggedInUser | None:
         return session["user"] if "user" in session else None
+
+    @staticmethod
+    def require_csrf_token() -> None:
+        if "csrf_token" not in request.form:
+            abort(FORBIDDEN)
+        if request.form["csrf_token"] != session["csrf_token"]:
+            abort(FORBIDDEN)
 
 
 @app.template_filter()
@@ -96,6 +106,7 @@ def log_in():
 def log_out():
     if not Session.logged_in():
         return redirect("/login")
+    Session.require_csrf_token()
     Session.log_out()
     return redirect("/")
 
@@ -164,6 +175,7 @@ def create_new_recipe():
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
+    Session.require_csrf_token()
 
     all_tags = tags.get_tags()
 
@@ -243,6 +255,7 @@ def update_recipe(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
+    Session.require_csrf_token()
 
     all_tags = tags.get_tags()
 
@@ -273,6 +286,7 @@ def delete_recipe(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
+    Session.require_csrf_token()
 
     recipes.delete_recipe(user["id"], recipe_id)
 
@@ -308,6 +322,7 @@ def create_new_review(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
+    Session.require_csrf_token()
 
     if reviews.get_review_by_user(recipe_id, user["id"]):
         abort(BAD_REQUEST)
@@ -372,6 +387,7 @@ def update_review(recipe_id: int):
     user = Session.get_logged_in_user()
     if not user:
         return redirect("/login")
+    Session.require_csrf_token()
 
     recipe = recipes.get_recipe(recipe_id)
     if not recipe:

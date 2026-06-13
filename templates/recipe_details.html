@@ -13,6 +13,7 @@
         {% if session.user and session.user.id == recipe.user_id %}
         <a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
         <form action="/recipes/{{recipe.id}}/delete" method="post">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
             <input type="submit" value="Delete recipe" />
         </form>
         {% endif %}
