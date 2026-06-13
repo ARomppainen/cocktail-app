@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 from typing import Any
 
 from werkzeug.datastructures import ImmutableMultiDict
@@ -25,6 +26,15 @@ class UserReview:
     rating: int
     recipe_id: int
     recipe_title: str
+
+
+@dataclass(frozen=True)
+class UserReviewResult:
+    page: int
+    page_count: int
+    page_size: int
+    row_count: int
+    items: list[UserReview]
 
 
 @dataclass(frozen=True)
@@ -76,8 +86,13 @@ def get_reviews(recipe_id: int, exclude_user_id: int | None) -> list[Review]:
     return [_to_review(row) for row in result]
 
 
-def get_reviews_by_user(user_id: int) -> list[UserReview]:
-    sql = """
+def get_reviews_by_user(user_id: int, page: int, page_size: int) -> UserReviewResult:
+    count_sql = """
+        SELECT count(id) as row_count
+        FROM review
+        WHERE review.user_id = ?
+    """
+    query_sql = """
         SELECT
             review.created_at,
             review.title,
@@ -87,11 +102,23 @@ def get_reviews_by_user(user_id: int) -> list[UserReview]:
             recipe.title as recipe_title
         FROM review
         INNER JOIN recipe ON review.recipe_id = recipe.id
-        WHERE review.recipe_id = ?
+        WHERE review.user_id = ?
         ORDER BY datetime(review.created_at) DESC
+        LIMIT ? OFFSET ?
     """
-    result = db.query(sql, [user_id])
-    return [_to_user_review(row) for row in result]
+    row_count = db.query(count_sql, [user_id])[0]["row_count"]
+    page_count = math.ceil(row_count / page_size)
+
+    result = db.query(query_sql, [user_id, page_size, (page - 1) * page_size])
+    items = [_to_user_review(row) for row in result]
+
+    return UserReviewResult(
+        page=page,
+        page_count=page_count,
+        page_size=page_size,
+        row_count=row_count,
+        items=items,
+    )
 
 
 def get_review_by_user(recipe_id: int, user_id: int) -> Review | None:

@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 import math
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 from werkzeug.datastructures import ImmutableMultiDict
 
 import db
 from tags import Tag
+
+T = TypeVar("T")
 
 
 @dataclass(frozen=True)
@@ -30,11 +32,12 @@ class RecipeSearchItem:
 
 
 @dataclass(frozen=True)
-class RecipeSearchResult:
+class PaginatedResult(Generic[T]):
     page: int
     page_count: int
     page_size: int
-    items: list[RecipeSearchItem]
+    row_count: int
+    items: list[T]
 
 
 @dataclass(frozen=True)
@@ -111,8 +114,15 @@ def get_recipe(recipe_id: int) -> Recipe | None:
     return _to_recipe(result[0]) if result else None
 
 
-def get_recipes_by_user(user_id: int) -> list[Recipe]:
-    sql = """
+def get_recipes_by_user(
+    user_id: int, page: int, page_size: int
+) -> PaginatedResult[Recipe]:
+    count_sql = """
+        SELECT count(id) as row_count
+        FROM recipe
+        WHERE recipe.user_id = ?
+    """
+    query_sql = """
         SELECT
             recipe.id,
             recipe.user_id,
@@ -127,12 +137,26 @@ def get_recipes_by_user(user_id: int) -> list[Recipe]:
         WHERE recipe.user_id = ?
         GROUP BY recipe.id
         ORDER BY datetime(created_at) DESC, tag.name
+        LIMIT ? OFFSET ?
     """
-    result = db.query(sql, [user_id])
-    return [_to_recipe(row) for row in result]
+    row_count = db.query(count_sql, [user_id])[0]["row_count"]
+    page_count = math.ceil(row_count / page_size)
+
+    result = db.query(query_sql, [user_id, page_size, (page - 1) * page_size])
+    items = [_to_recipe(row) for row in result]
+
+    return PaginatedResult(
+        page=page,
+        page_count=page_count,
+        page_size=page_size,
+        row_count=row_count,
+        items=items,
+    )
 
 
-def search_recipes(query: str, page: int, page_size: int) -> RecipeSearchResult:
+def search_recipes(
+    query: str, page: int, page_size: int
+) -> PaginatedResult[RecipeSearchItem]:
     count_sql = """
         SELECT count(id) as row_count
         FROM recipe
@@ -177,8 +201,12 @@ def search_recipes(query: str, page: int, page_size: int) -> RecipeSearchResult:
     result = db.query(search_sql, params)
     items = [_to_recipe_search_item(row) for row in result]
 
-    return RecipeSearchResult(
-        page=page, page_count=page_count, page_size=page_size, items=items
+    return PaginatedResult(
+        page=page,
+        page_count=page_count,
+        page_size=page_size,
+        row_count=row_count,
+        items=items,
     )
 
 

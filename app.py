@@ -431,16 +431,11 @@ def get_user_details_page(user_id: int):
     if not user:
         abort(NOT_FOUND)
 
-    user_recipes = recipes.get_recipes_by_user(user_id)
-    user_reviews = reviews.get_reviews_by_user(user_id)
-    recipe_count = len(user_recipes)
-    review_count = len(user_reviews)
+    recipes_page = max(1, request.args.get("recipes_page", default=1, type=int))
+    reviews_page = max(1, request.args.get("reviews_page", default=1, type=int))
+    user_recipes = recipes.get_recipes_by_user(user_id, recipes_page, 20)
+    user_reviews = reviews.get_reviews_by_user(user_id, reviews_page, 10)
 
     return render_template(
-        "user_details.html",
-        user=user,
-        recipes=user_recipes,
-        reviews=user_reviews,
-        recipe_count=recipe_count,
-        review_count=review_count,
+        "user_details.html", user=user, recipes=user_recipes, reviews=user_reviews
     )

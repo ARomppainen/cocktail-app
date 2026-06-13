@@ -4,37 +4,59 @@
     <h2>User details: {{user.username}}</h2>
     <section>
         <h3>Recipes by {{user.username}}</h3>
-        {% if recipe_count == 0 %}
+        {% if recipes.row_count == 0 %}
         <p>{{user.username}} has not created any recipes.</p>
         {% endif %}
-        {% if recipe_count == 1 %}
+        {% if recipes.row_count == 1 %}
         <p>{{user.username}} has created one recipe.</p>
         {% endif %}
-        {% if recipe_count > 1 %}
-        <p>{{user.username}} has created {{recipe_count}} recipes.</p>
+        {% if recipes.row_count > 1 %}
+        <p>{{user.username}} has created {{recipes.row_count}} recipes.</p>
         {% endif %}
-        {% if recipes %}
+        {% if recipes.items %}
         <ul>
-            {% for recipe in recipes %}
+            {% for recipe in recipes.items %}
             <li><a href="{{'/recipes/' ~ recipe.id}}">{{recipe.title}}</a></li>
             {% endfor %}
         </ul>
+        <nav>
+            <ul class="pagination-ctrls">
+                <li class="pagination-ctrl"><a href="?recipes_page=1&reviews_page={{reviews.page}}">First</a></li>
+                <li class="pagination-ctrl">
+                    {% if recipes.page > 1 %}
+                    <a href="?recipes_page={{recipes.page-1}}&reviews_page={{reviews.page}}">Prev</a>
+                    {% else %}
+                    <span>Prev</span>
+                    {% endif %}
+                </li>
+                <li class="pagination-ctrl"><span>{{recipes.page}} / {{recipes.page_count}}</span></li>
+                <li class="pagination-ctrl">
+                    {% if recipes.page_count > recipes.page %}
+                    <a href="?recipes_page={{recipes.page+1}}&reviews_page={{reviews.page}}">Next</a>
+                    {% else %}
+                    <span>Next</span>
+                    {% endif %}
+                </li>
+                <li class="pagination-ctrl"><a
+                        href="?recipes_page={{recipes.page_count}}&reviews_page={{reviews.page}}">Last</a></li>
+            </ul>
+        </nav>
         {% endif %}
     </section>
     <section>
         <h3>Reviews by {{user.username}}</h3>
-        {% if review_count == 0 %}
+        {% if reviews.row_count == 0 %}
         <p>{{user.username}} has not written any reviews.</p>
         {% endif %}
-        {% if review_count == 1 %}
+        {% if reviews.row_count == 1 %}
         <p>{{user.username}} has written one review.</p>
         {% endif %}
-        {% if review_count > 1 %}
-        <p>{{user.username}} has written {{review_count}} reviews.</p>
+        {% if reviews.row_count > 1 %}
+        <p>{{user.username}} has written {{reviews.row_count}} reviews.</p>
         {% endif %}
-        {% if reviews %}
+        {% if reviews.items %}
         <ul>
-            {% for review in reviews %}
+            {% for review in reviews.items %}
             <li class="user-review">
                 <details>
                     <summary><a href="{{'/recipes/' ~ review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}
@@ -44,6 +66,29 @@
             </li>
             {% endfor %}
         </ul>
+        <nav>
+            <ul class="pagination-ctrls">
+                <li class="pagination-ctrl"><a href="?recipes_page={{recipes.page}}&reviews_page=1">First</a></li>
+                <li class="pagination-ctrl">
+                    {% if reviews.page > 1 %}
+                    <a href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page-1}}">Prev</a>
+                    {% else %}
+                    <span>Prev</span>
+                    {% endif %}
+                </li>
+                <li class="pagination-ctrl"><span>{{reviews.page}} / {{reviews.page_count}}</span></li>
+                <li class="pagination-ctrl">
+                    {% if reviews.page_count > reviews.page %}
+                    <a href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page+1}}">Next</a>
+                    {% else %}
+                    <span>Next</span>
+                    {% endif %}
+                </li>
+                <li class="pagination-ctrl"><a
+                        href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page_count}}">Last</a>
+                </li>
+            </ul>
+        </nav>
         {% endif %}
     </section>
 </article>
