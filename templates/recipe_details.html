@@ -11,11 +11,13 @@
         {% endif %}
 
         {% if session.user and session.user.id == recipe.user_id %}
-        <a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
-        <form action="/recipes/{{recipe.id}}/delete" method="post">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-            <input type="submit" value="Delete recipe" />
-        </form>
+        <div class="flex-container">
+            <a href="/recipes/{{recipe.id}}/update">Edit recipe</a>
+            <form action="/recipes/{{recipe.id}}/delete" method="post">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+                <input type="submit" value="Delete recipe" />
+            </form>
+        </div>
         {% endif %}
     </section>
     <section>
@@ -29,13 +31,15 @@
         {% else %}
         <a href="/recipes/{{recipe.id}}/review/new">Write a review</a>
         {% endif %}
+        <hr />
         {% endif %}
 
         {% if reviews.items %}
-        <ul>
+        <p>Reviews from other users</p>
+        <ul class="user-reviews">
             {% for review in reviews.items %}
             <li>
-                <h3>{{review.title}}</h3>
+                <h4>{{review.title}}</h4>
                 <p>{{review.content | show_lines}}</p>
                 <!-- TODO: render the rating -->
             </li>

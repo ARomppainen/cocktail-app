@@ -3,12 +3,12 @@
 <section>
     <h2>Recipes</h2>
 
-    <form action="/recipes" method="get">
+    <form class="search-form" action="/recipes" method="get">
         <input type="text" name="query" value="{{form.query or ''}}" />
         <input type="submit" value="Search" />
     </form>
     {% if recipes %}
-    <table>
+    <table class="search-results">
         <thead>
             <th scope="col">Title</th>
             <th scope="col">Created by</th>

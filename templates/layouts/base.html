@@ -11,10 +11,10 @@
     <header>
         <h1>Cocktail app</h1>
 
-        <div>
+        <div class="flex-container">
             {% if session.user %}
-            <p>Hello {{ session.user.username }}</p>
-            <form action="/logout" method="post">
+            <span>Hello {{ session.user.username }}</span>
+            <form class="inline-item" action="/logout" method="post">
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
                 <input type="submit" value="Log out" />
             </form>
@@ -26,11 +26,12 @@
     </header>
 
     <nav>
-        <ul>
+        <ul class="main-navigation">
             <li><a href="/">Home</a></li>
             <li><a href="/recipes">Recipes</a></li>
             {% if session.user %}
             <li><a href="/recipes/new">New recipe</a></li>
+            <li><a href="/users/{{session.user.id}}">Profile</a></li>
             {% endif %}
         </ul>
     </nav>
