@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 import math
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 from werkzeug.datastructures import ImmutableMultiDict
 
 import db
+
+T = TypeVar("T")
 
 
 @dataclass(frozen=True)
@@ -29,12 +31,12 @@ class UserReview:
 
 
 @dataclass(frozen=True)
-class UserReviewResult:
+class PaginatedResult(Generic[T]):
     page: int
     page_count: int
     page_size: int
     row_count: int
-    items: list[UserReview]
+    items: list[T]
 
 
 @dataclass(frozen=True)
@@ -62,8 +64,15 @@ class ReviewForm:
         return ReviewForm(title=title, content=content, rating=rating), errors
 
 
-def get_reviews(recipe_id: int, exclude_user_id: int | None) -> list[Review]:
-    sql = """
+def get_reviews(
+    recipe_id: int, exclude_user_id: int | None, page: int, page_size: int
+) -> PaginatedResult[Review]:
+    count_sql = """
+        SELECT count(id) AS row_count
+        FROM review
+        WHERE review.recipe_id = ?
+    """
+    query_sql = """
         SELECT
             review.id,
             review.user_id,
@@ -78,15 +87,29 @@ def get_reviews(recipe_id: int, exclude_user_id: int | None) -> list[Review]:
     """
     params = [recipe_id]
 
-    if exclude_user_id is not None:
-        sql += " AND review.user_id <> ?"
+    if exclude_user_id:
+        count_sql += "AND review.user_id <> ?"
+        query_sql += "AND review.user_id <> ?"
         params.append(exclude_user_id)
 
-    result = db.query(sql, params)
-    return [_to_review(row) for row in result]
+    row_count = db.query(count_sql, params)[0]["row_count"]
+    page_count = math.ceil(row_count / page_size)
+
+    result = db.query(query_sql, params)
+    items = [_to_review(row) for row in result]
+
+    return PaginatedResult(
+        page=page,
+        page_count=page_count,
+        page_size=page_size,
+        row_count=row_count,
+        items=items,
+    )
 
 
-def get_reviews_by_user(user_id: int, page: int, page_size: int) -> UserReviewResult:
+def get_reviews_by_user(
+    user_id: int, page: int, page_size: int
+) -> PaginatedResult[UserReview]:
     count_sql = """
         SELECT count(id) as row_count
         FROM review
@@ -112,7 +135,7 @@ def get_reviews_by_user(user_id: int, page: int, page_size: int) -> UserReviewRe
     result = db.query(query_sql, [user_id, page_size, (page - 1) * page_size])
     items = [_to_user_review(row) for row in result]
 
-    return UserReviewResult(
+    return PaginatedResult(
         page=page,
         page_count=page_count,
         page_size=page_size,

@@ -217,7 +217,9 @@ def get_recipe_details_page(recipe_id: int):
     user = Session.get_logged_in_user()
     user_id = user["id"] if user else None
 
-    found_reviews = reviews.get_reviews(recipe_id, user_id)
+    page = max(1, request.args.get("page", default=1, type=int))
+
+    found_reviews = reviews.get_reviews(recipe_id, user_id, page, 10)
     user_review = (
         reviews.get_review_by_user(recipe_id, user_id) if user_id is not None else None
     )
