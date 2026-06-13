@@ -1,4 +1,4 @@
-{% macro create(form, validation_errors, action) -%}
+{% macro create(form, validation_errors, action, tags) -%}
 <form action="{{action}}" method="post">
     <p>
         <label for="recipe-title">Title</label>
@@ -22,6 +22,22 @@
         <span>{{validation_errors["instructions"]}}</span>
         {% endif %}
     </p>
+    {% if tags %}
+    <fieldset class="tags-container">
+        <legend>Tags</legend>
+        {% for tag in tags %}
+        <div>
+            {% if tag.id in form.tags %}
+            <input id="recipe-tag-{{tag.id}}" type="checkbox" name="tags" value="{{tag.id}}" checked />
+            {% else %}
+            <input id="recipe-tag-{{tag.id}}" type="checkbox" name="tags" value="{{tag.id}}" />
+            {% endif %}
+
+            <label for="recipe-tag-{{tag.id}}" class="inline">{{tag.name}}</label>
+        </div>
+        {% endfor %}
+    </fieldset>
+    {% endif %}
     <input type="submit" value="Submit" />
 </form>
 {%- endmacro %}

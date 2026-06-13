@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import recipes
 import reviews
 import users
+import tags
 
 app = Flask(__name__)
 
@@ -150,7 +151,12 @@ def get_recipes_page():
 def get_new_recipe_page():
     if not Session.logged_in():
         return redirect("/login")
-    return render_template("recipe_new.html", form=recipes.RecipeForm.empty())
+
+    all_tags = tags.get_tags()
+
+    return render_template(
+        "recipe_new.html", form=recipes.RecipeForm.empty(), tags=all_tags
+    )
 
 
 @app.route("/recipes/new", methods=["POST"])
@@ -159,16 +165,17 @@ def create_new_recipe():
     if not user:
         return redirect("/login")
 
-    form = recipes.RecipeForm(
-        title=request.form["title"],
-        ingredients=request.form["ingredients"],
-        instructions=request.form["instructions"],
-    )
+    all_tags = tags.get_tags()
 
-    if validation_errors := form.validate():
+    form, validation_errors = recipes.RecipeForm.parse(request.form, all_tags)
+
+    if validation_errors:
         return (
             render_template(
-                "recipe_new.html", form=form, validation_errors=validation_errors
+                "recipe_new.html",
+                form=form,
+                validation_errors=validation_errors,
+                tags=all_tags,
             ),
             BAD_REQUEST,
         )
@@ -216,13 +223,19 @@ def get_recipe_update_page(recipe_id: int):
     if user["id"] != recipe.user_id:
         abort(NOT_FOUND)
 
+    all_tags = tags.get_tags()
+    recipe_tags = tags.get_tags_by_recipe(recipe_id)
+
     form = recipes.RecipeForm(
         title=recipe.title,
         ingredients=recipe.ingredients,
         instructions=recipe.instructions,
+        tags=recipe_tags,
     )
 
-    return render_template("recipe_update.html", recipe_id=recipe_id, form=form)
+    return render_template(
+        "recipe_update.html", recipe_id=recipe_id, form=form, tags=all_tags
+    )
 
 
 @app.route("/recipes/<int:recipe_id>/update", methods=["POST"])
@@ -231,19 +244,18 @@ def update_recipe(recipe_id: int):
     if not user:
         return redirect("/login")
 
-    form = recipes.RecipeForm(
-        title=request.form["title"],
-        ingredients=request.form["ingredients"],
-        instructions=request.form["instructions"],
-    )
+    all_tags = tags.get_tags()
 
-    if validation_errors := form.validate():
+    form, validation_errors = recipes.RecipeForm.parse(request.form, all_tags)
+
+    if validation_errors:
         return (
             render_template(
                 "recipe_edit.html",
                 recipe_id=recipe_id,
                 form=form,
                 validation_errors=validation_errors,
+                tags=all_tags,
             ),
             BAD_REQUEST,
         )

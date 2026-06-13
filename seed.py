@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash
 import db
 from recipes import create_recipe, RecipeForm
 from users import create_user
+from tags import get_tags
 
 USERS = ["Alice", "Bob", "Charlie", "Diane"]
 
@@ -32,13 +33,20 @@ def main() -> None:
     with open("recipes.json", encoding="utf-8") as recipes_json:
         recipe_data: list[Recipe] = json.load(recipes_json)
 
+    tag_ids = [tag.id for tag in get_tags()]
+
     for recipe in recipe_data:
         user_id = random.choice(user_ids)
         title = recipe["title"]
         ingredients = "\n".join(recipe["ingredients"])
         instructions = "\n".join(recipe["instructions"])
+        tags = random.sample(
+            tag_ids,
+            k=random.randint(0, len(tag_ids)),
+        )
+
         print(f"insert recipe: '{title}'")
-        create_recipe(RecipeForm(title, ingredients, instructions), user_id)
+        create_recipe(RecipeForm(title, ingredients, instructions, tags), user_id)
 
 
 if __name__ == "__main__":

@@ -41,6 +41,7 @@ The application requires a sqlite database. You can create one using the followi
 
 ```
 sqlite3 database.db < schema.sql
+sqlite3 database.db < init.sql
 ```
 
 The application requires a secret key for session management. You can use the following script to generate a random key:

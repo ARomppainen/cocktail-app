@@ -12,6 +12,7 @@
         <th scope="col">Title</th>
         <th scope="col">Created by</th>
         <th scope="col">Created at</th>
+        <th scope="col">Tags</th>
     </thead>
     <tbody>
         {% for recipe in recipes %}
@@ -19,6 +20,7 @@
             <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
             <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
             <td>{{recipe.created_at}}</td>
+            <td>{{recipe.tags if recipe.tags else ''}}</td>
         </tr>
         {% endfor %}
     </tbody>

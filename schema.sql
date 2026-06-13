@@ -36,5 +36,7 @@ CREATE TABLE tag (
 CREATE TABLE recipe_tag (
     recipe_id INTEGER NOT NULL,
     tag_id INTEGER NOT NULL,
-    PRIMARY KEY (recipe_id, tag_id)
+    PRIMARY KEY (recipe_id, tag_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tag (id)
 );
