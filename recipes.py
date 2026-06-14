@@ -1,45 +1,10 @@
 from dataclasses import dataclass
 import math
-from typing import Any, Generic, TypeVar
 
 from werkzeug.datastructures import ImmutableMultiDict
 
 import db
 from tags import Tag
-
-T = TypeVar("T")
-
-
-@dataclass(frozen=True)
-class Recipe:
-    id: int
-    user_id: int
-    created_at: str
-    title: str
-    ingredients: str
-    instructions: str
-    tags: str
-    avg_rating: float
-
-
-@dataclass(frozen=True)
-class RecipeSearchItem:
-    id: int
-    user_id: int
-    username: str
-    created_at: str
-    title: str
-    tags: str
-    avg_rating: float
-
-
-@dataclass(frozen=True)
-class PaginatedResult(Generic[T]):
-    page: int
-    page_count: int
-    page_size: int
-    row_count: int
-    items: list[T]
 
 
 @dataclass(frozen=True)
@@ -95,7 +60,7 @@ class RecipeSearchForm:
     query: str | None
 
 
-def get_recipe(recipe_id: int) -> Recipe | None:
+def get_recipe(recipe_id: int):
     sql = """
         SELECT
             recipe.id,
@@ -118,12 +83,10 @@ def get_recipe(recipe_id: int) -> Recipe | None:
         ORDER BY tag.name
     """
     result = db.query(sql, [recipe_id])
-    return _to_recipe(result[0]) if result else None
+    return result[0] if result else None
 
 
-def get_recipes_by_user(
-    user_id: int, page: int, page_size: int
-) -> PaginatedResult[Recipe]:
+def get_recipes_by_user(user_id: int, page: int, page_size: int):
     count_sql = """
         SELECT count(id) as row_count
         FROM recipe
@@ -155,20 +118,17 @@ def get_recipes_by_user(
     page_count = math.ceil(row_count / page_size)
 
     result = db.query(query_sql, [user_id, page_size, (page - 1) * page_size])
-    items = [_to_recipe(row) for row in result]
 
-    return PaginatedResult(
-        page=page,
-        page_count=page_count,
-        page_size=page_size,
-        row_count=row_count,
-        items=items,
-    )
+    return {
+        "page": page,
+        "page_count": page_count,
+        "page_size": page_size,
+        "row_count": row_count,
+        "items": result,
+    }
 
 
-def search_recipes(
-    query: str, page: int, page_size: int
-) -> PaginatedResult[RecipeSearchItem]:
+def search_recipes(query: str, page: int, page_size: int):
     count_sql = """
         SELECT count(id) as row_count
         FROM recipe
@@ -216,15 +176,14 @@ def search_recipes(
     params.append((page - 1) * page_size)
 
     result = db.query(search_sql, params)
-    items = [_to_recipe_search_item(row) for row in result]
 
-    return PaginatedResult(
-        page=page,
-        page_count=page_count,
-        page_size=page_size,
-        row_count=row_count,
-        items=items,
-    )
+    return {
+        "page": page,
+        "page_count": page_count,
+        "page_size": page_size,
+        "row_count": row_count,
+        "items": result,
+    }
 
 
 def create_recipe(form: RecipeForm, user_id: int) -> int:
@@ -304,28 +263,3 @@ def delete_recipe(user_id: int, recipe_id: int) -> None:
         AND user_id = ?
     """
     db.execute(sql, [recipe_id, user_id])
-
-
-def _to_recipe(row: Any) -> Recipe:
-    return Recipe(
-        id=row["id"],
-        user_id=row["user_id"],
-        created_at=row["created_at"],
-        title=row["title"],
-        ingredients=row["ingredients"],
-        instructions=row["instructions"],
-        tags=row["tags"],
-        avg_rating=row["avg_rating"],
-    )
-
-
-def _to_recipe_search_item(row: Any) -> RecipeSearchItem:
-    return RecipeSearchItem(
-        id=row["id"],
-        user_id=row["user_id"],
-        username=row["username"],
-        created_at=row["created_at"],
-        title=row["title"],
-        tags=row["tags"],
-        avg_rating=row["avg_rating"],
-    )

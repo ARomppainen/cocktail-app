@@ -1,20 +1,7 @@
 from dataclasses import dataclass
 import sqlite3
-from typing import TypedDict
 
 import db
-
-
-class LoggedInUser(TypedDict):
-    id: int
-    username: str
-
-
-@dataclass(frozen=True)
-class User:
-    id: int
-    username: str
-    password_hash: str
 
 
 @dataclass(frozen=True)
@@ -69,35 +56,25 @@ class UsernameNotAvailableError(RuntimeError):
     pass
 
 
-def get_user(user_id: int) -> User | None:
+def get_user(user_id: int):
     sql = "SELECT id, username, password_hash FROM user WHERE id = ?"
     result = db.query(sql, [user_id])
-    if not result:
-        return None
-    row = result[0]
-    return User(
-        id=row["id"], username=row["username"], password_hash=row["password_hash"]
-    )
+    return result[0] if result else None
 
 
-def get_user_by_name(username: str) -> User | None:
+def get_user_by_name(username: str):
     sql = "SELECT id, username, password_hash FROM user WHERE username = ?"
     result = db.query(sql, [username])
-    if not result:
-        return None
-    row = result[0]
-    return User(
-        id=row["id"], username=row["username"], password_hash=row["password_hash"]
-    )
+    return result[0] if result else None
 
 
-def create_user(username: str, password_hash: str) -> User:
+def create_user(username: str, password_hash: str) -> int:
     sql = "INSERT INTO user (username, password_hash) VALUES (?, ?)"
     try:
         result = db.execute(
             sql,
             [username, password_hash],
         )
-        return User(id=result.lastrowid, username=username, password_hash=password_hash)
+        return result.lastrowid
     except sqlite3.IntegrityError as err:
         raise UsernameNotAvailableError from err

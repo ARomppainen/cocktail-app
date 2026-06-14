@@ -37,14 +37,14 @@ def main() -> None:
     print("Inserting users...")
     for user in USERS:
         pw = generate_password_hash(user)
-        user = create_user(user, pw)
-        user_ids.append(user.id)
+        user_id = create_user(user, pw)
+        user_ids.append(user_id)
     print("Done!")
 
     with open("seed_recipes.json", encoding="utf-8") as recipes_json:
         recipe_data: list[Recipe] = json.load(recipes_json)
 
-    tag_ids = [tag.id for tag in get_tags()]
+    tag_ids = [tag["id"] for tag in get_tags()]
 
     created_recipes: list[tuple[int, int]] = []
     print("Inserting recipes...")

@@ -30,10 +30,10 @@
         <hr />
         {% endif %}
 
-        {% if reviews.items %}
+        {% if reviews["items"] %}
         <p>Reviews from other users</p>
         <ul class="user-reviews">
-            {% for review in reviews.items %}
+            {% for review in reviews["items"] %}
             <li>
                 <h4>{{review.title}}</h4>
                 <p>{{review.content | show_lines}}</p>

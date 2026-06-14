@@ -1,42 +1,9 @@
 from dataclasses import dataclass
 import math
-from typing import Any, Generic, TypeVar
 
 from werkzeug.datastructures import ImmutableMultiDict
 
 import db
-
-T = TypeVar("T")
-
-
-@dataclass(frozen=True)
-class Review:
-    id: int
-    user_id: int
-    username: str
-    created_at: str
-    title: str
-    content: str
-    rating: int
-
-
-@dataclass(frozen=True)
-class UserReview:
-    created_at: str
-    title: str
-    content: str
-    rating: int
-    recipe_id: int
-    recipe_title: str
-
-
-@dataclass(frozen=True)
-class PaginatedResult(Generic[T]):
-    page: int
-    page_count: int
-    page_size: int
-    row_count: int
-    items: list[T]
 
 
 @dataclass(frozen=True)
@@ -64,9 +31,7 @@ class ReviewForm:
         return ReviewForm(title=title, content=content, rating=rating), errors
 
 
-def get_reviews(
-    recipe_id: int, exclude_user_id: int | None, page: int, page_size: int
-) -> PaginatedResult[Review]:
+def get_reviews(recipe_id: int, exclude_user_id: int | None, page: int, page_size: int):
     count_sql = """
         SELECT count(id) AS row_count
         FROM review
@@ -96,20 +61,17 @@ def get_reviews(
     page_count = math.ceil(row_count / page_size)
 
     result = db.query(query_sql, params)
-    items = [_to_review(row) for row in result]
 
-    return PaginatedResult(
-        page=page,
-        page_count=page_count,
-        page_size=page_size,
-        row_count=row_count,
-        items=items,
-    )
+    return {
+        "page": page,
+        "page_count": page_count,
+        "page_size": page_size,
+        "row_count": row_count,
+        "items": result,
+    }
 
 
-def get_reviews_by_user(
-    user_id: int, page: int, page_size: int
-) -> PaginatedResult[UserReview]:
+def get_reviews_by_user(user_id: int, page: int, page_size: int):
     count_sql = """
         SELECT count(id) as row_count
         FROM review
@@ -133,18 +95,17 @@ def get_reviews_by_user(
     page_count = math.ceil(row_count / page_size)
 
     result = db.query(query_sql, [user_id, page_size, (page - 1) * page_size])
-    items = [_to_user_review(row) for row in result]
 
-    return PaginatedResult(
-        page=page,
-        page_count=page_count,
-        page_size=page_size,
-        row_count=row_count,
-        items=items,
-    )
+    return {
+        "page": page,
+        "page_count": page_count,
+        "page_size": page_size,
+        "row_count": row_count,
+        "items": result,
+    }
 
 
-def get_review_by_user(recipe_id: int, user_id: int) -> Review | None:
+def get_review_by_user(recipe_id: int, user_id: int):
     sql = """
         SELECT
             review.id,
@@ -160,7 +121,7 @@ def get_review_by_user(recipe_id: int, user_id: int) -> Review | None:
         AND review.user_id = ?
     """
     result = db.query(sql, [recipe_id, user_id])
-    return _to_review(result[0]) if result else None
+    return result[0] if result else None
 
 
 def create_review(form: ReviewForm, user_id: int, recipe_id: int) -> int:
@@ -194,26 +155,3 @@ def update_review(form: ReviewForm, user_id: int, recipe_id: int) -> bool:
         sql, [form.title, form.content, form.rating, user_id, recipe_id]
     )
     return bool(result.rowcount)
-
-
-def _to_review(row: Any) -> Review:
-    return Review(
-        id=row["id"],
-        user_id=row["user_id"],
-        username=row["username"],
-        created_at=row["created_at"],
-        title=row["title"],
-        content=row["content"],
-        rating=row["rating"],
-    )
-
-
-def _to_user_review(row: Any) -> UserReview:
-    return UserReview(
-        created_at=row["created_at"],
-        title=row["title"],
-        content=row["content"],
-        rating=row["rating"],
-        recipe_id=row["recipe_id"],
-        recipe_title=row["recipe_title"],
-    )

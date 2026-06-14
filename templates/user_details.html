@@ -13,9 +13,9 @@
         {% if recipes.row_count > 1 %}
         <p>{{user.username}} has created {{recipes.row_count}} recipes.</p>
         {% endif %}
-        {% if recipes.items %}
+        {% if recipes["items"] %}
         <ul>
-            {% for recipe in recipes.items %}
+            {% for recipe in recipes["items"] %}
             <li><a href="{{'/recipes/' ~ recipe.id}}">{{recipe.title}}</a></li>
             {% endfor %}
         </ul>
@@ -54,9 +54,9 @@
         {% if reviews.row_count > 1 %}
         <p>{{user.username}} has written {{reviews.row_count}} reviews.</p>
         {% endif %}
-        {% if reviews.items %}
+        {% if reviews["items"] %}
         <ul>
-            {% for review in reviews.items %}
+            {% for review in reviews["items"] %}
             <li class="user-review">
                 <details>
                     <summary><a href="{{'/recipes/' ~ review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}

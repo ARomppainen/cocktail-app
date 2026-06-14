@@ -28,8 +28,8 @@ NOT_FOUND = 404
 class Session:
 
     @staticmethod
-    def log_in(user: users.User) -> None:
-        session["user"] = users.LoggedInUser(id=user.id, username=user.username)
+    def log_in(user_id: int, username: str) -> None:
+        session["user"] = {"id": user_id, "username": username}
         session["csrf_token"] = secrets.token_hex(16)
 
     @staticmethod
@@ -41,7 +41,7 @@ class Session:
         del session["user"]
 
     @staticmethod
-    def get_logged_in_user() -> users.LoggedInUser | None:
+    def get_logged_in_user():
         return session["user"] if "user" in session else None
 
     @staticmethod
@@ -90,7 +90,7 @@ def log_in():
 
     user = users.get_user_by_name(form.username)
 
-    if not user or not check_password_hash(user.password_hash, form.password):
+    if not user or not check_password_hash(user["password_hash"], form.password):
         return (
             render_template(
                 "login.html", form=form, error="Incorrect username or password"
@@ -98,7 +98,7 @@ def log_in():
             BAD_REQUEST,
         )
 
-    Session.log_in(user)
+    Session.log_in(user["id"], form.username)
     return redirect("/")
 
 
@@ -133,7 +133,9 @@ def register():
         )
 
     try:
-        user = users.create_user(form.username, generate_password_hash(form.password1))
+        user_id = users.create_user(
+            form.username, generate_password_hash(form.password1)
+        )
     except users.UsernameNotAvailableError:
         return (
             render_template(
@@ -144,7 +146,7 @@ def register():
             BAD_REQUEST,
         )
 
-    Session.log_in(user)
+    Session.log_in(user_id, form.username)
     return redirect("/")
 
 
@@ -160,10 +162,10 @@ def get_recipes_page():
     return render_template(
         "recipes.html",
         form=form,
-        recipes=search_result.items,
-        page=search_result.page,
-        page_count=search_result.page_count,
-        page_size=search_result.page_size,
+        recipes=search_result["items"],
+        page=search_result["page"],
+        page_count=search_result["page_count"],
+        page_size=search_result["page_size"],
     )
 
 
@@ -187,8 +189,9 @@ def create_new_recipe():
     Session.require_csrf_token()
 
     all_tags = tags.get_tags()
+    tag_ids = [tag["id"] for tag in all_tags]
 
-    form, validation_errors = recipes.RecipeForm.parse(request.form, all_tags)
+    form, validation_errors = recipes.RecipeForm.parse(request.form, tag_ids)
 
     if validation_errors:
         return (
@@ -243,17 +246,17 @@ def get_recipe_update_page(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    if user["id"] != recipe.user_id:
+    if recipe["user_id"] != user["id"]:
         abort(NOT_FOUND)
 
     all_tags = tags.get_tags()
-    recipe_tags = tags.get_tags_by_recipe(recipe_id)
+    recipe_tag_ids = tags.get_tag_ids_by_recipe(recipe_id)
 
     form = recipes.RecipeForm(
-        title=recipe.title,
-        ingredients=recipe.ingredients,
-        instructions=recipe.instructions,
-        tags=recipe_tags,
+        title=recipe["title"],
+        ingredients=recipe["ingredients"],
+        instructions=recipe["instructions"],
+        tags=recipe_tag_ids,
     )
 
     return render_template(
@@ -269,8 +272,9 @@ def update_recipe(recipe_id: int):
     Session.require_csrf_token()
 
     all_tags = tags.get_tags()
+    tag_ids = [tag["id"] for tag in all_tags]
 
-    form, validation_errors = recipes.RecipeForm.parse(request.form, all_tags)
+    form, validation_errors = recipes.RecipeForm.parse(request.form, tag_ids)
 
     if validation_errors:
         return (
@@ -317,7 +321,7 @@ def get_new_review_page(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    if recipe.user_id == user["id"]:
+    if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
     return render_template(
@@ -342,7 +346,7 @@ def create_new_review(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    if recipe.user_id == user["id"]:
+    if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
     form, validation_errors = reviews.ReviewForm.parse(request.form)
@@ -374,7 +378,7 @@ def get_review_update_page(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    if recipe.user_id == user["id"]:
+    if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
     review = reviews.get_review_by_user(recipe_id, user["id"])
@@ -382,7 +386,7 @@ def get_review_update_page(recipe_id: int):
         abort(NOT_FOUND)
 
     form = reviews.ReviewForm(
-        title=review.title, content=review.content, rating=review.rating
+        title=review["title"], content=review["content"], rating=review["rating"]
     )
 
     return render_template(
@@ -404,7 +408,7 @@ def update_review(recipe_id: int):
     if not recipe:
         abort(NOT_FOUND)
 
-    if recipe.user_id == user["id"]:
+    if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
     form, validation_errors = reviews.ReviewForm.parse(request.form)
