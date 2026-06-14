@@ -11,6 +11,7 @@
     <table class="search-results">
         <thead>
             <th scope="col">Title</th>
+            <th scole="col">Rating</th>
             <th scope="col">Created by</th>
             <th scope="col">Created at</th>
             <th scope="col">Tags</th>
@@ -19,6 +20,11 @@
             {% for recipe in recipes %}
             <tr>
                 <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
+                {% if recipe.avg_rating %}
+                <td>{{recipe.avg_rating | round(2, 'common')}}</td>
+                {% else %}
+                <td></td>
+                {% endif %}
                 <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
                 <td>{{recipe.created_at}}</td>
                 <td>{{recipe.tags if recipe.tags else ''}}</td>

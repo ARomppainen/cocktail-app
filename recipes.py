@@ -19,6 +19,7 @@ class Recipe:
     ingredients: str
     instructions: str
     tags: str
+    avg_rating: float
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,7 @@ class RecipeSearchItem:
     created_at: str
     title: str
     tags: str
+    avg_rating: float
 
 
 @dataclass(frozen=True)
@@ -102,7 +104,12 @@ def get_recipe(recipe_id: int) -> Recipe | None:
             recipe.title,
             recipe.ingredients,
             recipe.instructions,
-            group_concat(tag.name, ', ') as tags
+            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT avg(review.rating)
+                FROM review
+                WHERE review.recipe_id = recipe.id
+            ) avg_rating
         FROM recipe
         LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
         LEFT JOIN tag ON recipe_tag.tag_id = tag.id
@@ -130,13 +137,18 @@ def get_recipes_by_user(
             recipe.title,
             recipe.ingredients,
             recipe.instructions,
-            group_concat(tag.name, ', ') as tags
+            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT avg(review.rating)
+                FROM review
+                WHERE review.recipe_id = recipe.id
+            ) avg_rating
         FROM recipe
         LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
         LEFT JOIN tag ON recipe_tag.tag_id = tag.id
         WHERE recipe.user_id = ?
         GROUP BY recipe.id
-        ORDER BY datetime(created_at) DESC, tag.name
+        ORDER BY datetime(recipe.created_at) DESC, tag.name
         LIMIT ? OFFSET ?
     """
     row_count = db.query(count_sql, [user_id])[0]["row_count"]
@@ -168,7 +180,12 @@ def search_recipes(
             recipe.created_at,
             recipe.title,
             user.username,
-            group_concat(tag.name, ', ') as tags
+            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT avg(review.rating)
+                FROM review
+                WHERE review.recipe_id = recipe.id
+            ) avg_rating
         FROM recipe
         INNER JOIN user ON recipe.user_id = user.id
         LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
@@ -298,6 +315,7 @@ def _to_recipe(row: Any) -> Recipe:
         ingredients=row["ingredients"],
         instructions=row["instructions"],
         tags=row["tags"],
+        avg_rating=row["avg_rating"],
     )
 
 
@@ -309,4 +327,5 @@ def _to_recipe_search_item(row: Any) -> RecipeSearchItem:
         created_at=row["created_at"],
         title=row["title"],
         tags=row["tags"],
+        avg_rating=row["avg_rating"],
     )

@@ -1,14 +1,10 @@
 {% extends "layouts/base.html" %}
+{% import 'macros/recipe_details.html' as recipe_details %}
 {% block content %}
 <article>
     <h2>Recipe details</h2>
     <section>
-        <h3>{{recipe.title}}</h3>
-        <p>{{recipe.ingredients | show_lines}}</p>
-        <p>{{recipe.instructions | show_lines}}</p>
-        {% if recipe.tags %}
-        <p><span>Tags: </span>{{recipe.tags}}</p>
-        {% endif %}
+        {{ recipe_details.render(recipe) }}
 
         {% if session.user and session.user.id == recipe.user_id %}
         <div class="flex-container">
