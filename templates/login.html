@@ -4,14 +4,15 @@
 <form action="/login" method="post">
     <p>
         <label for="username">Username</label>
-        <input id="username" name="username" type="text" value="{{form.username}}" required />
+        <input id="username" name="username" type="text" value="{{form.username}}" size="20" required maxlength="20" />
         {% if "username" in validation_errors %}
         <span>{{validation_errors["username"]}}</span>
         {% endif %}
     </p>
     <p>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" value="{{form.password}}" required />
+        <input id="password" name="password" type="password" value="{{form.password}}" size="20" required
+            maxlength="512" />
         {% if "password" in validation_errors %}
         <span>{{validation_errors["password"]}}</span>
         {% endif %}

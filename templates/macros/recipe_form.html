@@ -2,22 +2,23 @@
 <form action="{{action}}" method="post">
     <p>
         <label for="recipe-title">Title</label>
-        <input id="recipe-title" type="text" name="title" value="{{form.title}}" size="20" required />
+        <input id="recipe-title" type="text" name="title" value="{{form.title}}" size="30" required maxlength="30" />
         {% if "title" in validation_errors %}
         <span>{{validation_errors["title"]}}</span>
         {% endif %}
     </p>
     <p>
         <label for="recipe-ingredients">Ingredients</label>
-        <textarea id="recipe-ingredients" name="ingredients" rows="5" cols="40" required>{{form.ingredients}}</textarea>
+        <textarea id="recipe-ingredients" name="ingredients" rows="5" cols="40" required
+            maxlength="200">{{form.ingredients}}</textarea>
         {% if "ingredients" in validation_errors %}
         <span>{{validation_errors["ingredients"]}}</span>
         {% endif %}
     </p>
     <p>
         <label for="recipe-instructions">Instructions</label>
-        <textarea id="recipe-instructions" name="instructions" rows="5" cols="40"
-            required>{{form.instructions}}</textarea>
+        <textarea id="recipe-instructions" name="instructions" rows="5" cols="40" required
+            maxlength="200">{{form.instructions}}</textarea>
         {% if "instructions" in validation_errors %}
         <span>{{validation_errors["instructions"]}}</span>
         {% endif %}

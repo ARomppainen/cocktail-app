@@ -2,14 +2,15 @@
 <form action="{{action}}" method="post">
     <p>
         <label for="review-title">Title</label>
-        <input id="review-title" type="text" name="title" value="{{form.title}}" size="40" required />
+        <input id="review-title" type="text" name="title" value="{{form.title}}" size="30" required maxlength="30" />
         {% if "title" in validation_errors %}
         <span>{{validation_errors["title"]}}</span>
         {% endif %}
     </p>
     <p>
         <label for="review-content">Content</label>
-        <textarea id="review-content" name="content" rows="5" cols="40" required>{{form.content}}</textarea>
+        <textarea id="review-content" name="content" rows="5" cols="40" required
+            maxlength="200">{{form.content}}</textarea>
         {% if "content" in validation_errors %}
         <span>{{validation_errors["content"]}}</span>
         {% endif %}

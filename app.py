@@ -7,6 +7,7 @@ from flask import abort, redirect, render_template, request, session
 import markupsafe
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import forms
 import recipes
 import reviews
 import users
@@ -71,16 +72,14 @@ def get_index_page():
 
 @app.route("/login", methods=["GET"])
 def get_login_page():
-    return render_template("login.html", form=users.LoginForm.empty())
+    return render_template("login.html", form=forms.LoginForm.empty())
 
 
 @app.route("/login", methods=["POST"])
 def log_in():
-    form = users.LoginForm(
-        username=request.form["username"], password=request.form["password"]
-    )
+    form, validation_errors = forms.LoginForm.parse(request.form)
 
-    if validation_errors := form.validate():
+    if validation_errors:
         return (
             render_template(
                 "login.html", form=form, validation_errors=validation_errors
@@ -113,18 +112,14 @@ def log_out():
 
 @app.route("/register", methods=["GET"])
 def get_register_page():
-    return render_template("register.html", form=users.CreateUserForm.empty())
+    return render_template("register.html", form=forms.CreateUserForm.empty())
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    form = users.CreateUserForm(
-        username=request.form["username"],
-        password1=request.form["password1"],
-        password2=request.form["password2"],
-    )
+    form, validation_errors = forms.CreateUserForm.parse(request.form)
 
-    if validation_errors := form.validate():
+    if validation_errors:
         return (
             render_template(
                 "register.html", form=form, validation_errors=validation_errors
@@ -152,12 +147,23 @@ def register():
 
 @app.route("/recipes", methods=["GET"])
 def get_recipes_page():
-    form = recipes.RecipeSearchForm(query=request.args.get("query"))
-    # TODO: validate query string
-
-    page = max(1, request.args.get("page", default=1, type=int))
+    form, validation_errors = forms.RecipeSearchForm.parse(request.args)
     page_size = 20
-    search_result = recipes.search_recipes(form.query, page, page_size)
+
+    if validation_errors:
+        return (
+            render_template(
+                "recipes.html",
+                form=form,
+                recipes=[],
+                page=form.page,
+                page_count=0,
+                page_size=page_size,
+            ),
+            BAD_REQUEST,
+        )
+
+    search_result = recipes.search_recipes(form.query, form.page, page_size)
 
     return render_template(
         "recipes.html",
@@ -177,7 +183,7 @@ def get_new_recipe_page():
     all_tags = tags.get_tags()
 
     return render_template(
-        "recipe_new.html", form=recipes.RecipeForm.empty(), tags=all_tags
+        "recipe_new.html", form=forms.RecipeForm.empty(), tags=all_tags
     )
 
 
@@ -191,7 +197,7 @@ def create_new_recipe():
     all_tags = tags.get_tags()
     tag_ids = [tag["id"] for tag in all_tags]
 
-    form, validation_errors = recipes.RecipeForm.parse(request.form, tag_ids)
+    form, validation_errors = forms.RecipeForm.parse(request.form, tag_ids)
 
     if validation_errors:
         return (
@@ -252,7 +258,7 @@ def get_recipe_update_page(recipe_id: int):
     all_tags = tags.get_tags()
     recipe_tag_ids = tags.get_tag_ids_by_recipe(recipe_id)
 
-    form = recipes.RecipeForm(
+    form = forms.RecipeForm(
         title=recipe["title"],
         ingredients=recipe["ingredients"],
         instructions=recipe["instructions"],
@@ -274,7 +280,7 @@ def update_recipe(recipe_id: int):
     all_tags = tags.get_tags()
     tag_ids = [tag["id"] for tag in all_tags]
 
-    form, validation_errors = recipes.RecipeForm.parse(request.form, tag_ids)
+    form, validation_errors = forms.RecipeForm.parse(request.form, tag_ids)
 
     if validation_errors:
         return (
@@ -328,7 +334,7 @@ def get_new_review_page(recipe_id: int):
         "review_new.html",
         recipe_id=recipe_id,
         recipe=recipe,
-        form=reviews.ReviewForm.empty(),
+        form=forms.ReviewForm.empty(),
     )
 
 
@@ -349,7 +355,7 @@ def create_new_review(recipe_id: int):
     if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
-    form, validation_errors = reviews.ReviewForm.parse(request.form)
+    form, validation_errors = forms.ReviewForm.parse(request.form)
 
     if validation_errors:
         return (
@@ -385,7 +391,7 @@ def get_review_update_page(recipe_id: int):
     if not review:
         abort(NOT_FOUND)
 
-    form = reviews.ReviewForm(
+    form = forms.ReviewForm(
         title=review["title"], content=review["content"], rating=review["rating"]
     )
 
@@ -411,7 +417,7 @@ def update_review(recipe_id: int):
     if recipe["user_id"] == user["id"]:
         abort(BAD_REQUEST)
 
-    form, validation_errors = reviews.ReviewForm.parse(request.form)
+    form, validation_errors = forms.ReviewForm.parse(request.form)
     if validation_errors:
         return (
             render_template(

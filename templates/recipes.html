@@ -4,7 +4,7 @@
     <h2>Recipes</h2>
 
     <form class="search-form" action="/recipes" method="get">
-        <input type="text" name="query" value="{{form.query or ''}}" />
+        <input type="text" name="query" value="{{form.query}}" size="50" maxlength="50" />
         <input type="submit" value="Search" />
     </form>
     {% if recipes %}
@@ -34,10 +34,10 @@
     </table>
     <nav>
         <ul class="pagination-ctrls">
-            <li class="pagination-ctrl"><a href="?query={{form.query or ''}}&page=1">First</a></li>
+            <li class="pagination-ctrl"><a href="?query={{form.query}}&page=1">First</a></li>
             <li class="pagination-ctrl">
                 {% if page > 1 %}
-                <a href="?query={{form.query or ''}}&page={{page-1}}">Prev</a>
+                <a href="?query={{form.query}}&page={{page-1}}">Prev</a>
                 {% else %}
                 <span>Prev</span>
                 {% endif %}
@@ -45,12 +45,12 @@
             <li class="pagination-ctrl"><span>{{page}} / {{page_count}}</span></li>
             <li class="pagination-ctrl">
                 {% if page_count > page %}
-                <a href="?query={{form.query or ''}}&page={{page+1}}">Next</a>
+                <a href="?query={{form.query}}&page={{page+1}}">Next</a>
                 {% else %}
                 <span>Next</span>
                 {% endif %}
             </li>
-            <li class="pagination-ctrl"><a href="?query={{form.query or ''}}&page={{page_count}}">Last</a></li>
+            <li class="pagination-ctrl"><a href="?query={{form.query}}&page={{page_count}}">Last</a></li>
         </ul>
     </nav>
 </section>

@@ -1,34 +1,8 @@
-from dataclasses import dataclass
 import math
-
-from werkzeug.datastructures import ImmutableMultiDict
 
 import db
 
-
-@dataclass(frozen=True)
-class ReviewForm:
-    title: str
-    content: str
-    rating: int
-
-    @staticmethod
-    def empty() -> "ReviewForm":
-        return ReviewForm("", "", 0)
-
-    @staticmethod
-    def parse(
-        form: ImmutableMultiDict[str, str],
-    ) -> tuple["ReviewForm", dict[str, str]]:
-        errors: dict[str, str] = {}
-
-        title = form["title"]
-        content = form["content"]
-        rating = form.get("rating", type=int)
-
-        # TODO: Add validation
-
-        return ReviewForm(title=title, content=content, rating=rating), errors
+from forms import ReviewForm
 
 
 def get_reviews(recipe_id: int, exclude_user_id: int | None, page: int, page_size: int):

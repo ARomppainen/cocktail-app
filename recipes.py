@@ -1,63 +1,8 @@
-from dataclasses import dataclass
 import math
 
-from werkzeug.datastructures import ImmutableMultiDict
-
 import db
-from tags import Tag
 
-
-@dataclass(frozen=True)
-class RecipeForm:
-    title: str
-    ingredients: str
-    instructions: str
-    tags: list[int]
-
-    @staticmethod
-    def empty() -> "RecipeForm":
-        return RecipeForm("", "", "", [])
-
-    @staticmethod
-    def parse(
-        form: ImmutableMultiDict[str, str], valid_tags: list[Tag]
-    ) -> tuple["RecipeForm", dict[str, str]]:
-        errors: dict[str, str] = {}
-
-        title = form["title"]
-        ingredients = form["ingredients"]
-        instructions = form["instructions"]
-        tags = set(form.getlist("tags", type=int))
-
-        # TODO: validate maximum field length
-
-        if not title:
-            errors["title"] = "Value is required"
-
-        if not ingredients:
-            errors["ingredients"] = "Value is required"
-
-        if not instructions:
-            errors["instructions"] = "Value is required"
-
-        valid_tag_ids = list(tag.id for tag in valid_tags)
-        if not tags.issubset(valid_tag_ids):
-            errors["tags"] = "Invalid tag detected"
-
-        return (
-            RecipeForm(
-                title=title,
-                ingredients=ingredients,
-                instructions=instructions,
-                tags=list(tags),
-            ),
-            errors,
-        )
-
-
-@dataclass(frozen=True)
-class RecipeSearchForm:
-    query: str | None
+from forms import RecipeForm
 
 
 def get_recipe(recipe_id: int):
