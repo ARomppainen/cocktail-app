@@ -23,7 +23,7 @@ CREATE TABLE review (
     content TEXT NOT NULL,
     rating INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id),
-    FOREIGN KEY (recipe_id) REFERENCES recipe (id)
+    FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX idx_review_user_recipe ON review (user_id, recipe_id);

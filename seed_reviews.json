@@ -1,0 +1,680 @@
+[
+    {
+        "title": "Absolutely Fantastic",
+        "content": [
+            "This cocktail was absolutely incredible. The balance of flavors was perfect, and I'll definitely be ordering this again."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Refreshing Summer Drink",
+        "content": [
+            "Perfect for a hot summer day. The citrus notes really come through nicely.",
+            "I appreciated the quality of the ingredients used.",
+            "Would highly recommend to anyone looking for a refreshing beverage."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Not What I Expected",
+        "content": [
+            "I ordered this expecting something more flavorful. It was a bit bland and the proportions seemed off.",
+            "The bartender could have been more attentive to detail."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Solid Choice",
+        "content": [
+            "Good drink, nothing extraordinary but definitely worth trying.",
+            "The garnish was a nice touch.",
+            "Priced fairly for the quality."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Disappointing Experience",
+        "content": [
+            "Unfortunately, this drink fell short of expectations."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Smooth and Sophisticated",
+        "content": [
+            "An elegant cocktail with complex flavors that unfold beautifully.",
+            "Each sip reveals something new.",
+            "The smooth finish is particularly impressive.",
+            "This is definitely a cocktail for special occasions."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Decent but Forgettable",
+        "content": [
+            "Average taste, nothing to write home about.",
+            "Could be improved with better quality spirits."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Too Strong",
+        "content": [
+            "While the flavor profile is interesting, the alcohol content is overwhelming.",
+            "I had to dilute it with more ice.",
+            "Less spirit would make this more balanced."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Bartender's Masterpiece",
+        "content": [
+            "The bartender really knows what they're doing.",
+            "This was crafted with precision and care.",
+            "Every element was perfectly executed."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Creative Twist",
+        "content": [
+            "Loved the creative interpretation of a classic.",
+            "The unexpected ingredient really works well here.",
+            "Definitely unique and memorable."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Unbalanced Mess",
+        "content": [
+            "The flavors clash rather than complement each other."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Great Value",
+        "content": [
+            "For the price point, this is an excellent cocktail.",
+            "You get quality without breaking the bank.",
+            "I'll be ordering this regularly."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Tropical Paradise",
+        "content": [
+            "Transported me to a tropical island with the first sip.",
+            "The fresh fruit flavors are divine.",
+            "Perfect accompaniment to the sunset.",
+            "Can't wait to have this again."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Mediocre",
+        "content": [
+            "It's okay, but nothing special.",
+            "Plenty of better options available."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Impressive Presentation",
+        "content": [
+            "Beautiful to look at and equally delicious.",
+            "The garnish really adds to the experience.",
+            "The bartender clearly cares about aesthetics."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Refreshingly Different",
+        "content": [
+            "A welcome departure from the usual cocktails.",
+            "The herbal notes are subtle but impactful.",
+            "I'm already recommending this to friends."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Too Sugary",
+        "content": [
+            "Way too much sugar in this drink.",
+            "Overwhelmingly sweet.",
+            "I couldn't finish it."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Perfectly Balanced",
+        "content": [
+            "This is what a well-made cocktail should taste like.",
+            "Sweet, sour, strong, and weak elements are in perfect harmony.",
+            "The bartender clearly understands their craft."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Nice Effort",
+        "content": [
+            "The bartender tried something interesting here.",
+            "Good attempt, though it could use some refinement."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Exactly What I Needed",
+        "content": [
+            "This hit the spot perfectly.",
+            "Exactly the flavor profile I was craving."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Overhyped",
+        "content": [
+            "Everyone raves about this drink, but I don't see what all the fuss is about.",
+            "It's decent, but not worth the premium price."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Absolutely Delicious",
+        "content": [
+            "This is hands down the best cocktail I've had in years.",
+            "The complexity of flavors is remarkable.",
+            "I'm completely blown away.",
+            "Already planning my next visit to order this again."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Not Bad",
+        "content": [
+            "Solid cocktail, did the job well.",
+            "Nothing remarkable but definitely enjoyable."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Bartender was Careless",
+        "content": [
+            "It seemed like the bartender rushed through making this.",
+            "The proportions were all wrong.",
+            "Very disappointed with the execution."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Summer in a Glass",
+        "content": [
+            "This cocktail captures the essence of summer perfectly.",
+            "Fresh, vibrant, and absolutely delightful."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Exceptional Craftsmanship",
+        "content": [
+            "The attention to detail in this cocktail is remarkable.",
+            "Every ingredient is high quality and carefully selected.",
+            "This is what professional bartending looks like.",
+            "Worth every penny."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Just Okay",
+        "content": [
+            "It's fine.",
+            "Nothing to complain about, but nothing special either."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Strong Flavors",
+        "content": [
+            "The flavors are bold and unapologetic.",
+            "If you like intense drinks, this is for you.",
+            "I enjoyed the strength of character in this cocktail."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Waste of Money",
+        "content": [
+            "Expensive and disappointing."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Smooth Operator",
+        "content": [
+            "Silky smooth texture with wonderful depth of flavor.",
+            "The finish is clean and elegant."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Worth the Hype",
+        "content": [
+            "I finally understand why everyone loves this drink.",
+            "It's sophisticated, delicious, and beautifully made.",
+            "This is a must-try for any cocktail enthusiast."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Adequate",
+        "content": [
+            "Meets expectations without exceeding them."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Flawless Execution",
+        "content": [
+            "Impossible to find any fault with this cocktail.",
+            "The bartender is clearly a master of their craft.",
+            "Simply outstanding in every way."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Underwhelming",
+        "content": [
+            "I had higher expectations based on the description.",
+            "Fell short in terms of flavor and presentation."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Hidden Gem",
+        "content": [
+            "This underrated cocktail deserves more recognition.",
+            "Absolutely delicious and creatively made.",
+            "I'm keeping this as my secret favorite.",
+            "Seriously, try it before it becomes too popular."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Respectable",
+        "content": [
+            "A respectable cocktail that does what it promises.",
+            "No complaints here."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Terrible",
+        "content": [
+            "This might be the worst cocktail I've ever had."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Aromatic Delight",
+        "content": [
+            "The aromatic profile is absolutely intoxicating in the best way.",
+            "Each component complements the others perfectly.",
+            "A sensory experience from start to finish."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Room for Improvement",
+        "content": [
+            "This shows promise but needs some work.",
+            "The basic concept is good, execution could be better."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Classic Excellence",
+        "content": [
+            "A timeless cocktail made to perfection.",
+            "You can't go wrong with this choice.",
+            "The bartender respects the tradition while executing flawlessly."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Average at Best",
+        "content": [
+            "It's average. Nothing more to say really."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Brilliant",
+        "content": [
+            "Brilliant in every conceivable way.",
+            "The innovation here is remarkable.",
+            "This is what happens when talent meets creativity.",
+            "A true masterpiece."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Decent Effort",
+        "content": [
+            "A decent effort that mostly works.",
+            "Could be refined further."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Unpleasant Aftertaste",
+        "content": [
+            "While the initial flavor is okay, the aftertaste is unpleasant.",
+            "I couldn't enjoy the full experience because of this.",
+            "Needs adjustment in the recipe."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Flavor Explosion",
+        "content": [
+            "This cocktail is a flavor explosion in the best possible way.",
+            "Layers of taste that keep revealing themselves."
+        ],
+        "rating": 4
+    },
+    {
+        "title": "Exceptional",
+        "content": [
+            "This is what exceptional bartending looks like.",
+            "Every element has been carefully considered.",
+            "The result is nothing short of spectacular."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Forgettable",
+        "content": [
+            "Quickly forgotten after finishing."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Worth Another Visit",
+        "content": [
+            "So good that I'm coming back just to order this again.",
+            "The bartender has created something truly special.",
+            "A new favorite of mine."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Standard",
+        "content": [
+            "Standard cocktail, standard quality.",
+            "Exactly what you'd expect."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Nasty",
+        "content": [
+            "Really didn't enjoy this at all."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Pure Joy",
+        "content": [
+            "This cocktail brings pure joy with every sip.",
+            "The flavors are harmonious and delightful.",
+            "I'm already recommending it to everyone I know."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Acceptable",
+        "content": [
+            "Acceptable quality at a reasonable price.",
+            "Nothing extraordinary but I'd order it again."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Skillfully Made",
+        "content": [
+            "This drink shows real skill and precision.",
+            "The bartender clearly has experience and talent.",
+            "I can taste the care that went into making this.",
+            "Highly impressed."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Disappointing Flavor",
+        "content": [
+            "The flavor profile didn't work for me.",
+            "It seemed off in some way."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Outstanding",
+        "content": [
+            "Outstanding in every way imaginable."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Unremarkable",
+        "content": [
+            "Unremarkable and forgettable.",
+            "I won't be ordering this again."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Magical Elixir",
+        "content": [
+            "This cocktail is like a magical elixir.",
+            "Transforms an ordinary evening into something special.",
+            "The artistry on display here is incredible.",
+            "Simply cannot recommend enough."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Passable",
+        "content": [
+            "Passable cocktail with some redeeming qualities.",
+            "Could be better though."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Awful",
+        "content": [
+            "This was absolutely awful from start to finish."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Delightful Experience",
+        "content": [
+            "What a delightful experience this was.",
+            "The balance of flavors is impeccable.",
+            "The presentation is beautiful."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Hit or Miss",
+        "content": [
+            "This particular batch hit the mark for me.",
+            "Quality consistency might be an issue here."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Perfection",
+        "content": [
+            "This is as close to perfection as a cocktail can get.",
+            "Every single element is perfect.",
+            "The bartender is an artist."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Not Impressed",
+        "content": [
+            "I really wasn't impressed with this offering."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Artfully Crafted",
+        "content": [
+            "This is an artfully crafted masterpiece.",
+            "The complexity and nuance here are remarkable.",
+            "This is true cocktail artistry."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Tolerable",
+        "content": [
+            "Tolerable, though not particularly special.",
+            "It's fine if you like this style."
+        ],
+        "rating": 3
+    },
+    {
+        "title": "Horrible",
+        "content": [
+            "One of the worst cocktails I've ever tasted."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Incredible",
+        "content": [
+            "Absolutely incredible from every angle.",
+            "This has set a new standard for cocktails.",
+            "The bartender deserves recognition for this work."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Meh",
+        "content": [
+            "Just meh."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Pinnacle of Mixology",
+        "content": [
+            "This represents the pinnacle of mixology.",
+            "Technical perfection meets creative brilliance.",
+            "I'm in awe of this cocktail.",
+            "This is what a five-star cocktail looks like."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Ordinary",
+        "content": [
+            "Ordinary cocktail for ordinary tastes.",
+            "Nothing to get excited about."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Transcendent",
+        "content": [
+            "This cocktail is genuinely transcendent.",
+            "It elevates the entire experience of drinking."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Subpar",
+        "content": [
+            "Subpar quality overall.",
+            "Expected better for the price."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Stunning",
+        "content": [
+            "Absolutely stunning cocktail.",
+            "Beautiful, delicious, and expertly made.",
+            "This is what excellence looks like."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Uninspired",
+        "content": [
+            "This cocktail lacks inspiration.",
+            "Feels generic and uninspired."
+        ],
+        "rating": 2
+    },
+    {
+        "title": "Phenomenal",
+        "content": [
+            "Phenomenal in every possible way.",
+            "The bartender has outdone themselves.",
+            "This will be my regular order going forward."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Barely Acceptable",
+        "content": [
+            "Barely acceptable quality.",
+            "Wouldn't recommend."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Enchanting",
+        "content": [
+            "Absolutely enchanting cocktail.",
+            "Each taste is a moment of pure bliss."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Uninspiring",
+        "content": [
+            "Uninspiring and forgettable experience."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "A Liquid Dream",
+        "content": [
+            "This is a liquid dream come true.",
+            "The bartender has captured something magical here.",
+            "I could drink this every day without getting tired of it."
+        ],
+        "rating": 5
+    },
+    {
+        "title": "Deeply Disappointed",
+        "content": [
+            "I'm deeply disappointed with this.",
+            "Expected so much more."
+        ],
+        "rating": 1
+    },
+    {
+        "title": "Impeccable",
+        "content": [
+            "Impeccable quality and execution.",
+            "This is how it's done."
+        ],
+        "rating": 5
+    }
+]
