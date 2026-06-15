@@ -67,7 +67,8 @@ def not_found(error: Any):
 
 @app.route("/", methods=["GET"])
 def get_index_page():
-    return render_template("index.html")
+    latest_recipes = recipes.get_latest_recipes(5)
+    return render_template("index.html", recipes=latest_recipes)
 
 
 @app.route("/login", methods=["GET"])

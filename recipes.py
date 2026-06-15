@@ -73,6 +73,34 @@ def get_recipes_by_user(user_id: int, page: int, page_size: int):
     }
 
 
+def get_latest_recipes(n: int):
+    sql = """
+        SELECT
+            recipe.id,
+            recipe.user_id,
+            recipe.created_at,
+            recipe.title,
+            recipe.ingredients,
+            recipe.instructions,
+            user.id,
+            user.username,
+            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT avg(review.rating)
+                FROM review
+                WHERE review.recipe_id = recipe.id
+            ) avg_rating
+        FROM recipe
+        INNER JOIN user ON recipe.user_id = user.id
+        LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
+        LEFT JOIN tag ON recipe_tag.tag_id = tag.id
+        GROUP BY recipe.id
+        ORDER BY datetime(recipe.created_at) DESC, tag.name
+        LIMIT ?
+    """
+    return db.query(sql, [n])
+
+
 def search_recipes(query: str, page: int, page_size: int):
     count_sql = """
         SELECT count(id) as row_count

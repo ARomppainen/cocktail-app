@@ -1,4 +1,18 @@
 {% extends "layouts/base.html" %}
+{% import 'macros/recipe_details.html' as recipe_details %}
 {% block content %}
-<p>More details to be added to the index page (soon).</p>
+{% if recipes %}
+<section>
+    <h2>Latest recipes</h2>
+    <ul class="carousel">
+        {% for recipe in recipes %}
+        <li>
+            <article>
+                {{ recipe_details.render(recipe) }}
+            </article>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% endblock %}

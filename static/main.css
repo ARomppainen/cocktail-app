@@ -72,3 +72,64 @@ table.search-results {
     border-spacing: 1rem 0;
     text-align: left;
 }
+
+ul.carousel {
+    anchor-name: --my-carousel;
+    padding: 2rem;
+    display: flex;
+    gap: 1vw;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    &::scroll-button(*) {
+        border: 0;
+        font-size: 2rem;
+        background: none;
+        cursor: pointer;
+    }
+
+    &::scroll-button(*):hover {
+        opacity: 1;
+    }
+
+    &::scroll-button(*):focus {
+        opacity: 1;
+    }
+
+    &::scroll-button(*):active:not(:disabled) {
+        translate: 1px 1px;
+    }
+
+    &::scroll-button(*):disabled {
+        opacity: 0.5;
+        cursor: unset;
+    }
+
+    &::scroll-button(*) {
+        position: absolute;
+        position-anchor: --my-carousel;
+    }
+
+    &::scroll-button(left) {
+        content: "◄" / "Previous";
+        right: calc(anchor(center));
+    }
+
+    &::scroll-button(right) {
+        content: "►" / "Next";
+        left: calc(anchor(center));
+    }
+
+    & li {
+        list-style-type: none;
+        background-color: #eeeeee;
+        padding: 20px;
+        flex: 0 0 100%;
+        scroll-snap-align: center;
+    }
+
+    & li:nth-child(even) {
+        background-color: #dddddd;
+    }
+}
