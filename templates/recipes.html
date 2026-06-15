@@ -26,7 +26,7 @@
                 <td></td>
                 {% endif %}
                 <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
-                <td>{{recipe.created_at}}</td>
+                <td>{{recipe.created_at | format_datetime}}</td>
                 <td>{{recipe.tags if recipe.tags else ''}}</td>
             </tr>
             {% endfor %}

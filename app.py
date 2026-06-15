@@ -25,6 +25,7 @@ app.secret_key = SECRET_KEY
 BAD_REQUEST = 400
 FORBIDDEN = 403
 NOT_FOUND = 404
+NON_BREAKING_SPACE = "\u00a0"
 
 
 class Session:
@@ -64,7 +65,7 @@ def show_lines(content: str) -> markupsafe.Markup:
 @app.template_filter()
 def format_datetime(value: str):
     parsed = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-    formatted = parsed.strftime("%B %d, %Y")
+    formatted = parsed.strftime("%B %d, %Y").replace(" ", NON_BREAKING_SPACE)
     return markupsafe.Markup(formatted)
 
 
