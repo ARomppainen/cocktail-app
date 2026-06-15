@@ -1,5 +1,5 @@
 {% macro render(recipe) -%}
-<h3>{{recipe.title}}</h3>
+<h3><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></h3>
 <p>{{recipe.ingredients | show_lines}}</p>
 <p>{{recipe.instructions | show_lines}}</p>
 {% if recipe.tags %}
