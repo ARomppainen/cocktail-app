@@ -23,6 +23,7 @@
         <p>You have written the following review:</p>
         <h3>{{user_review.title}}</h3>
         <p>{{user_review.content | show_lines}}</p>
+        <p>Rating: <span>{{'★' * user_review.rating}}</span></p>
         <a href="/recipes/{{recipe.id}}/review/update">Edit your review</a>
         {% else %}
         <a href="/recipes/{{recipe.id}}/review/new">Write a review</a>
@@ -37,7 +38,7 @@
             <li>
                 <h4>{{review.title}}</h4>
                 <p>{{review.content | show_lines}}</p>
-                <!-- TODO: render the rating -->
+                <p>Rating: <span>{{'★' * review.rating}}</span></p>
             </li>
             {% endfor %}
         </ul>
