@@ -285,7 +285,7 @@ def update_recipe(recipe_id: int):
     if validation_errors:
         return (
             render_template(
-                "recipe_edit.html",
+                "recipe_update.html",
                 recipe_id=recipe_id,
                 form=form,
                 validation_errors=validation_errors,
