@@ -14,6 +14,8 @@ def get_recipe(recipe_id: int):
             recipe.title,
             recipe.ingredients,
             recipe.instructions,
+            user.id as user_id,
+            user.username,
             group_concat(tag.name, ', ') as tags,
             (
                 SELECT avg(review.rating)
@@ -21,6 +23,7 @@ def get_recipe(recipe_id: int):
                 WHERE review.recipe_id = recipe.id
             ) avg_rating
         FROM recipe
+        INNER JOIN user ON recipe.user_id = user.id
         LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
         LEFT JOIN tag ON recipe_tag.tag_id = tag.id
         WHERE recipe.id = ?
@@ -82,7 +85,7 @@ def get_latest_recipes(n: int):
             recipe.title,
             recipe.ingredients,
             recipe.instructions,
-            user.id,
+            user.id as user_id,
             user.username,
             group_concat(tag.name, ', ') as tags,
             (

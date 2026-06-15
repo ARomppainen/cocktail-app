@@ -8,4 +8,6 @@
 {% if recipe.avg_rating %}
 <p><span>Rating: </span>{{recipe.avg_rating | round(2, 'common')}}</p>
 {% endif %}
+<p>Created by <a href="/users/{{recipe.user_id}}">{{recipe.username}}</a> at {{recipe.created_at |
+    format_datetime}}</p>
 {%- endmacro %}

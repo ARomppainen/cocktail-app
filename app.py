@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import secrets
 from typing import Any
@@ -58,6 +59,13 @@ def show_lines(content: str) -> markupsafe.Markup:
     content = str(markupsafe.escape(content))
     content = content.replace("\n", "<br />")
     return markupsafe.Markup(content)
+
+
+@app.template_filter()
+def format_datetime(value: str):
+    parsed = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    formatted = parsed.strftime("%B %d, %Y")
+    return markupsafe.Markup(formatted)
 
 
 @app.errorhandler(NOT_FOUND)
