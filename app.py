@@ -90,6 +90,7 @@ def log_in():
     form, validation_errors = forms.LoginForm.parse(request.form)
 
     if validation_errors:
+        form.password = ""
         return (
             render_template(
                 "login.html", form=form, validation_errors=validation_errors
@@ -100,9 +101,12 @@ def log_in():
     user = users.get_user_by_name(form.username)
 
     if not user or not check_password_hash(user["password_hash"], form.password):
+        form.password = ""
         return (
             render_template(
-                "login.html", form=form, error="Incorrect username or password"
+                "login.html",
+                form=form,
+                validation_errors={"username": "Incorrect username or password"},
             ),
             BAD_REQUEST,
         )
@@ -130,6 +134,8 @@ def register():
     form, validation_errors = forms.CreateUserForm.parse(request.form)
 
     if validation_errors:
+        form.password1 = ""
+        form.password2 = ""
         return (
             render_template(
                 "register.html", form=form, validation_errors=validation_errors
@@ -142,6 +148,8 @@ def register():
             form.username, generate_password_hash(form.password1)
         )
     except users.UsernameNotAvailableError:
+        form.password1 = ""
+        form.password2 = ""
         return (
             render_template(
                 "register.html",

@@ -14,7 +14,7 @@ TEXT_MAX_LENGTH = 200
 QUERY_MAX_LENGTH = 50
 
 
-@dataclass(frozen=True)
+@dataclass
 class LoginForm:
     username: str
     password: str
@@ -28,7 +28,7 @@ class LoginForm:
         errors: dict[str, str] = {}
 
         username = form.get("username", default="").strip()
-        password = form["password"]
+        password = form.get("password", default="")
 
         if not username:
             errors["username"] = VALUE_IS_REQUIRED
@@ -43,7 +43,7 @@ class LoginForm:
         return LoginForm(username=username, password=password), errors
 
 
-@dataclass(frozen=True)
+@dataclass
 class CreateUserForm:
     username: str
     password1: str
@@ -60,8 +60,8 @@ class CreateUserForm:
         errors: dict[str, str] = {}
 
         username = form.get("username", default="").strip()
-        password1 = form["password1"]
-        password2 = form["password2"]
+        password1 = form.get("password1", default="")
+        password2 = form.get("password2", default="")
 
         if not username:
             errors["username"] = VALUE_IS_REQUIRED
