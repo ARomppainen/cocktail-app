@@ -27,7 +27,7 @@ class LoginForm:
     def parse(form: ImmutableMultiDict[str, str]) -> tuple["LoginForm", dict[str, str]]:
         errors: dict[str, str] = {}
 
-        username = form["username"]
+        username = form.get("username", default="").strip()
         password = form["password"]
 
         if not username:
@@ -59,7 +59,7 @@ class CreateUserForm:
     ) -> tuple["CreateUserForm", dict[str, str]]:
         errors: dict[str, str] = {}
 
-        username = form["username"]
+        username = form.get("username", default="").strip()
         password1 = form["password1"]
         password2 = form["password2"]
 
@@ -103,9 +103,9 @@ class RecipeForm:
     ) -> tuple["RecipeForm", dict[str, str]]:
         errors: dict[str, str] = {}
 
-        title = form["title"]
-        ingredients = form["ingredients"]
-        instructions = form["instructions"]
+        title = form.get("title", default="").strip()
+        ingredients = form.get("ingredients", default="").strip()
+        instructions = form.get("instructions", default="").strip()
         tags = set(form.getlist("tags", type=int))
 
         if not title:
@@ -173,8 +173,8 @@ class ReviewForm:
     ) -> tuple["ReviewForm", dict[str, str]]:
         errors: dict[str, str] = {}
 
-        title = form["title"]
-        content = form["content"]
+        title = form.get("title", default="").strip()
+        content = form.get("content", default="").strip()
         rating = form.get("rating", default=0, type=int)
 
         if not title:
