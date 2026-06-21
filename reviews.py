@@ -34,6 +34,10 @@ def get_reviews(recipe_id: int, exclude_user_id: int | None, page: int, page_siz
     row_count = db.query(count_sql, params)[0]["row_count"]
     page_count = math.ceil(row_count / page_size)
 
+    query_sql += "LIMIT ? OFFSET ?"
+    params.append(page_size)
+    params.append((page - 1) * page_size)
+
     result = db.query(query_sql, params)
 
     return {
