@@ -41,7 +41,7 @@ class Session:
 
     @staticmethod
     def log_out() -> None:
-        del session["user"]
+        session.clear()
 
     @staticmethod
     def get_logged_in_user():
