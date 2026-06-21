@@ -70,7 +70,7 @@ def format_datetime(value: str):
 
 
 @app.errorhandler(NOT_FOUND)
-def not_found(error: Any):
+def not_found(_error: Any):
     return render_template("not_found.html"), NOT_FOUND
 
 
