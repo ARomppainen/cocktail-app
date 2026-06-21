@@ -40,3 +40,8 @@ CREATE TABLE recipe_tag (
     FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tag (id)
 );
+
+CREATE INDEX idx_recipe__created_at ON recipe (datetime(created_at));
+CREATE INDEX idx_recipe__title ON recipe (title);
+CREATE INDEX idx_review__recipe_id ON review (recipe_id);
+CREATE INDEX idx_review__recipe_id_user_id ON review (recipe_id, user_id);

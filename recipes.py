@@ -16,7 +16,12 @@ def get_recipe(recipe_id: int):
             recipe.instructions,
             user.id as user_id,
             user.username,
-            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT group_concat(tag.name, ', ')
+                FROM tag
+                INNER JOIN recipe_tag ON tag.id = recipe_tag.tag_id
+                WHERE recipe_tag.recipe_id = recipe.id
+            ) tags,
             (
                 SELECT avg(review.rating)
                 FROM review
@@ -24,11 +29,7 @@ def get_recipe(recipe_id: int):
             ) avg_rating
         FROM recipe
         INNER JOIN user ON recipe.user_id = user.id
-        LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
-        LEFT JOIN tag ON recipe_tag.tag_id = tag.id
         WHERE recipe.id = ?
-        GROUP BY recipe.id
-        ORDER BY tag.name
     """
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
@@ -48,18 +49,20 @@ def get_recipes_by_user(user_id: int, page: int, page_size: int):
             recipe.title,
             recipe.ingredients,
             recipe.instructions,
-            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT group_concat(tag.name, ', ')
+                FROM tag
+                INNER JOIN recipe_tag ON tag.id = recipe_tag.tag_id
+                WHERE recipe_tag.recipe_id = recipe.id
+            ) tags,
             (
                 SELECT avg(review.rating)
                 FROM review
                 WHERE review.recipe_id = recipe.id
             ) avg_rating
         FROM recipe
-        LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
-        LEFT JOIN tag ON recipe_tag.tag_id = tag.id
         WHERE recipe.user_id = ?
-        GROUP BY recipe.id
-        ORDER BY datetime(recipe.created_at) DESC, tag.name
+        ORDER BY datetime(recipe.created_at) DESC
         LIMIT ? OFFSET ?
     """
     row_count = db.query(count_sql, [user_id])[0]["row_count"]
@@ -87,7 +90,12 @@ def get_latest_recipes(n: int):
             recipe.instructions,
             user.id as user_id,
             user.username,
-            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT group_concat(tag.name, ', ')
+                FROM tag
+                INNER JOIN recipe_tag ON tag.id = recipe_tag.tag_id
+                WHERE recipe_tag.recipe_id = recipe.id
+            ) tags,
             (
                 SELECT avg(review.rating)
                 FROM review
@@ -95,10 +103,7 @@ def get_latest_recipes(n: int):
             ) avg_rating
         FROM recipe
         INNER JOIN user ON recipe.user_id = user.id
-        LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
-        LEFT JOIN tag ON recipe_tag.tag_id = tag.id
-        GROUP BY recipe.id
-        ORDER BY datetime(recipe.created_at) DESC, tag.name
+        ORDER BY datetime(recipe.created_at) DESC
         LIMIT ?
     """
     return db.query(sql, [n])
@@ -116,7 +121,12 @@ def search_recipes(query: str, page: int, page_size: int):
             recipe.created_at,
             recipe.title,
             user.username,
-            group_concat(tag.name, ', ') as tags,
+            (
+                SELECT group_concat(tag.name, ', ')
+                FROM tag
+                INNER JOIN recipe_tag ON tag.id = recipe_tag.tag_id
+                WHERE recipe_tag.recipe_id = recipe.id
+            ) tags,
             (
                 SELECT avg(review.rating)
                 FROM review
@@ -124,8 +134,6 @@ def search_recipes(query: str, page: int, page_size: int):
             ) avg_rating
         FROM recipe
         INNER JOIN user ON recipe.user_id = user.id
-        LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipe_id
-        LEFT JOIN tag ON recipe_tag.tag_id = tag.id
     """
     filter_sql = """
         WHERE title LIKE ?
@@ -144,7 +152,6 @@ def search_recipes(query: str, page: int, page_size: int):
     page_count = math.ceil(row_count / page_size)
 
     search_sql += """
-        GROUP BY recipe.id
         ORDER BY recipe.title
         LIMIT ? OFFSET ?
     """
