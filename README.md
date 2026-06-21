@@ -96,3 +96,7 @@ Run the application
 ```
 flask run
 ```
+
+## Performance testing report
+
+See [the report document](./performance_testing_report.md).
