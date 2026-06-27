@@ -1,6 +1,14 @@
 {% extends "layouts/base.html" %}
 {% import 'macros/recipe_details.html' as recipe_details %}
 {% block content %}
+<article>
+    <h2>Welcome to the world of cocktails!</h2>
+    <p>This is a community-driven recipe app for cocktail enthusiasts. <a href="/recipes">Browse</a> our collection of
+        drinks, and discover new favorites. Whether you're a home bartender or just curious, you have come to the right
+        place!</p>
+    <p>By creating your own account, you will be able to save your own recipes, post reviews and rate drinks you've
+        tried.</p>
+</article>
 <section>
     <h2>Latest recipes</h2>
     {% if recipes %}
