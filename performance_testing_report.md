@@ -2,7 +2,7 @@
 
 ## Test data
 
-See [seed_perf_testing.py](./seed_perf_testing.py)
+See [seed_perf_testing.py](./src/seed_perf_testing.py)
 
 - 1 million users
 - 1 million recipes

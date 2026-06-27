@@ -62,13 +62,13 @@ poetry install
 
 (Optional) Initialize the database with seed data
 ```
-poetry run python seed.py
+poetry run python src/seed.py
 ```
 
 Run the application
 
 ```
-poetry run flask run
+poetry run flask --app src/app.py run
 ```
 
 ### Option 2: Without Poetry
@@ -88,13 +88,13 @@ pip install -r requirements.txt
 
 (Optional) Initialize the database with seed data
 ```
-python3 seed.py
+python3 src/seed.py
 ```
 
 Run the application
 
 ```
-flask run
+flask --app src/app.py run
 ```
 
 ## Performance testing report
