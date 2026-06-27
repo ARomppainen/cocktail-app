@@ -102,6 +102,26 @@ def get_review_by_user(recipe_id: int, user_id: int):
     return result[0] if result else None
 
 
+def get_latest_reviews(n: int):
+    sql = """
+        SELECT
+            review.created_at,
+            review.title,
+            review.content,
+            review.rating,
+            recipe.id as recipe_id,
+            recipe.title as recipe_title,
+            user.id as user_id,
+            user.username
+        FROM review
+        INNER JOIN recipe ON review.recipe_id = recipe.id
+        INNER JOIN user ON review.user_id = user.id
+        ORDER BY datetime(review.created_at) DESC
+        LIMIT ?
+    """
+    return db.query(sql, [n])
+
+
 def create_review(form: ReviewForm, user_id: int, recipe_id: int) -> int:
     sql = """
         INSERT INTO review (

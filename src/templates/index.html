@@ -17,4 +17,24 @@
     <p>No recipes found</p>
     {% endif %}
 </section>
+<section>
+    <h2>Latest reviews</h2>
+    {% if reviews %}
+    <ul class="carousel">
+        {% for review in reviews %}
+        <li>
+            <article>
+                <h3><a href="/recipes/{{review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}</h3>
+                <p>{{review.content | show_lines}}</p>
+                <p>Rating: <span>{{'★' * review.rating}}</span></p>
+                <p>By <a href="/users/{{review.user_id}}">{{review.username}}</a> at
+                    {{review.created_at|format_datetime}}</p>
+            </article>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No reviews found</p>
+    {% endif %}
+</section>
 {% endblock %}

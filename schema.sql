@@ -43,5 +43,6 @@ CREATE TABLE recipe_tag (
 
 CREATE INDEX idx_recipe__created_at ON recipe (datetime(created_at));
 CREATE INDEX idx_recipe__title ON recipe (title);
+CREATE INDEX idx_review__created_at ON review (datetime(created_at));
 CREATE INDEX idx_review__recipe_id ON review (recipe_id);
 CREATE INDEX idx_review__recipe_id_user_id ON review (recipe_id, user_id);
