@@ -236,7 +236,6 @@ def create_new_recipe():
 
 @app.route("/recipes/<int:recipe_id>", methods=["GET"])
 def get_recipe_details_page(recipe_id: int):
-
     recipe = recipes.get_recipe(recipe_id)
 
     if not recipe:
@@ -313,9 +312,9 @@ def update_recipe(recipe_id: int):
             BAD_REQUEST,
         )
 
-    found = recipes.update_recipe(form, user["id"], recipe_id)
+    recipe_updated = recipes.update_recipe(form, user["id"], recipe_id)
 
-    if not found:
+    if not recipe_updated:
         abort(NOT_FOUND)
 
     return redirect(f"/recipes/{recipe_id}")
@@ -449,8 +448,8 @@ def update_review(recipe_id: int):
             BAD_REQUEST,
         )
 
-    found = reviews.update_review(form, user["id"], recipe_id)
-    if not found:
+    review_updated = reviews.update_review(form, user["id"], recipe_id)
+    if not review_updated:
         abort(NOT_FOUND)
 
     return redirect(f"/recipes/{recipe_id}")
