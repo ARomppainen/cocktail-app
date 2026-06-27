@@ -1,9 +1,9 @@
 {% extends "layouts/base.html" %}
 {% import 'macros/recipe_details.html' as recipe_details %}
 {% block content %}
-{% if recipes %}
 <section>
     <h2>Latest recipes</h2>
+    {% if recipes %}
     <ul class="carousel">
         {% for recipe in recipes %}
         <li>
@@ -13,6 +13,8 @@
         </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p>No recipes found</p>
+    {% endif %}
 </section>
-{% endif %}
 {% endblock %}
