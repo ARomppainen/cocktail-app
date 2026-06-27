@@ -27,8 +27,12 @@ def get_reviews(recipe_id: int, exclude_user_id: int | None, page: int, page_siz
     params = [recipe_id]
 
     if exclude_user_id:
-        count_sql += "AND review.user_id <> ?"
-        query_sql += "AND review.user_id <> ?"
+        count_sql += """
+            AND review.user_id <> ?
+        """
+        query_sql += """
+            AND review.user_id <> ?
+        """
         params.append(exclude_user_id)
 
     row_count = db.query(count_sql, params)[0]["row_count"]

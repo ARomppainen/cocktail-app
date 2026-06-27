@@ -224,7 +224,10 @@ def update_recipe(form: RecipeForm, user_id: int, recipe_id: int) -> bool:
         connection.close()
         return False
 
-    tag_delete_sql = "DELETE FROM recipe_tag WHERE recipe_id = ?"
+    tag_delete_sql = """
+        DELETE FROM recipe_tag
+        WHERE recipe_id = ?
+    """
     connection.execute(tag_delete_sql, [recipe_id])
 
     tag_insert_sql = """

@@ -2,7 +2,11 @@ import db
 
 
 def get_tags():
-    sql = "SELECT id, name FROM tag ORDER BY name"
+    sql = """
+        SELECT id, name
+        FROM tag
+        ORDER BY name
+    """
     return db.query(sql)
 
 
