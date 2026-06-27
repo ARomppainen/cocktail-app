@@ -26,28 +26,25 @@ class Review(TypedDict):
     rating: int
 
 
-def main() -> None:
-    print("Deleting existing data...")
-    db.execute("DELETE FROM recipe")
-    db.execute("DELETE FROM user")
-    print("Done!")
-
+def _insert_users() -> list[int]:
     user_ids: list[int] = []
-
-    print("Inserting users...")
     for user in USERS:
         pw = generate_password_hash(user)
         user_id = create_user(user, pw)
         user_ids.append(user_id)
-    print("Done!")
+    return user_ids
 
+
+def _read_recipes() -> list[Recipe]:
     with open("seed_recipes.json", encoding="utf-8") as recipes_json:
-        recipe_data: list[Recipe] = json.load(recipes_json)
+        return json.load(recipes_json)
 
+
+def _insert_recipes(user_ids: list[int]) -> list[tuple[int, int]]:
+    recipe_data = _read_recipes()
     tag_ids = [tag["id"] for tag in get_tags()]
 
     created_recipes: list[tuple[int, int]] = []
-    print("Inserting recipes...")
     for recipe in recipe_data:
         user_id = random.choice(user_ids)
         title = recipe["title"]
@@ -62,8 +59,11 @@ def main() -> None:
             RecipeForm(title, ingredients, instructions, tags), user_id
         )
         created_recipes.append((recipe_id, user_id))
-    print("Done!")
 
+    return created_recipes
+
+
+def _read_reviews_by_category() -> dict[str, list[Review]]:
     with open("seed_reviews.json", encoding="utf-8") as reviews_json:
         review_data: list[Review] = json.load(reviews_json)
 
@@ -73,13 +73,18 @@ def main() -> None:
     for k, g in itertools.groupby(review_data, key=lambda row: row["rating"]):
         reviews_by_rating[k] = list(g)
 
-    reviews_by_category = {
+    return {
         "good": reviews_by_rating[4] + reviews_by_rating[5],
         "average": reviews_by_rating[2] + reviews_by_rating[3] + reviews_by_rating[4],
         "bad": reviews_by_rating[1] + reviews_by_rating[2],
     }
 
-    print("Inserting reviews...")
+
+def _insert_reviews(
+    user_ids: list[int], created_recipes: list[tuple[int, int]]
+) -> None:
+    reviews_by_category = _read_reviews_by_category()
+
     for recipe_id, user_id in created_recipes:
         other_user_ids = [x for x in user_ids if x != user_id]
         category = random.choice(["good", "average", "bad"])
@@ -92,6 +97,24 @@ def main() -> None:
             create_review(
                 ReviewForm(title, content, rating), other_user_ids[i], recipe_id
             )
+
+
+def main() -> None:
+    print("Deleting existing data...")
+    db.execute("DELETE FROM recipe")
+    db.execute("DELETE FROM user")
+    print("Done!")
+
+    print("Inserting users...")
+    user_ids = _insert_users()
+    print("Done!")
+
+    print("Inserting recipes...")
+    created_recipes = _insert_recipes(user_ids)
+    print("Done!")
+
+    print("Inserting reviews...")
+    _insert_reviews(user_ids, created_recipes)
     print("Done!")
 
 
