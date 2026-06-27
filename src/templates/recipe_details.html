@@ -1,9 +1,8 @@
 {% extends "layouts/base.html" %}
 {% import 'macros/recipe_details.html' as recipe_details %}
 {% block content %}
-<article>
-    <h2>Recipe details</h2>
-    <section>
+<div class="two-columns">
+    <article>
         {{ recipe_details.render(recipe) }}
 
         {% if session.user and session.user.id == recipe.user_id %}
@@ -15,9 +14,9 @@
             </form>
         </div>
         {% endif %}
-    </section>
-    <section>
-        <h3>Reviews</h3>
+    </article>
+    <article>
+        <h2>Reviews</h2>
         {% if session.user and session.user.id != recipe.user_id %}
         {% if user_review %}
         <p>You have written the following review:</p>
@@ -32,11 +31,10 @@
         {% endif %}
 
         {% if reviews["items"] %}
-        <p>Reviews from other users</p>
         <ul class="user-reviews">
             {% for review in reviews["items"] %}
             <li>
-                <h4>{{review.title}}</h4>
+                <h3>{{review.title}}</h3>
                 <p>{{review.content | show_lines}}</p>
                 <p>Rating: <span>{{'★' * review.rating}}</span></p>
             </li>
@@ -44,23 +42,23 @@
         </ul>
         <nav>
             <ul class="pagination-ctrls">
-                <li class="pagination-ctrl"><a href="?page=1">First</a></li>
-                <li class="pagination-ctrl">
+                <li><a href="?page=1">First</a></li>
+                <li>
                     {% if reviews.page > 1 %}
                     <a href="?page={{reviews.page-1}}">Prev</a>
                     {% else %}
                     <span>Prev</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><span>{{reviews.page}} / {{reviews.page_count}}</span></li>
-                <li class="pagination-ctrl">
+                <li><span>{{reviews.page}} / {{reviews.page_count}}</span></li>
+                <li>
                     {% if reviews.page_count > reviews.page %}
                     <a href="?page={{reviews.page+1}}">Next</a>
                     {% else %}
                     <span>Next</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><a href="?page={{reviews.page_count}}">Last</a></li>
+                <li><a href="?page={{reviews.page_count}}">Last</a></li>
             </ul>
         </nav>
         {% endif %}
@@ -68,6 +66,6 @@
         {% if not reviews.items and not user_review %}
         <p>No reviews found.</p>
         {% endif %}
-    </section>
-</article>
+    </article>
+</div>
 {% endblock %}

@@ -2,7 +2,13 @@
 {% import 'macros/recipe_details.html' as recipe_details %}
 {% import 'macros/review_form.html' as review_form %}
 {% block content %}
-{{ recipe_details.render(recipe) }}
-<h2>New review</h2>
-{{ review_form.create(form, validation_errors, "/recipes/" ~ recipe_id ~ "/review/new") }}
+<div class="two-columns">
+    <article>
+        {{ recipe_details.render(recipe) }}
+    </article>
+    <article>
+        <h2>New review</h2>
+        {{ review_form.create(form, validation_errors, "/recipes/" ~ recipe_id ~ "/review/new") }}
+    </article>
+</div>
 {% endblock %}

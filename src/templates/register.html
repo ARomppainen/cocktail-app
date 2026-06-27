@@ -1,28 +1,30 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<h2>Create a new account</h2>
-<form action="/register" method="post">
-    <p>
-        <label for="username">Username</label>
-        <input type="text" name="username" value="{{form.username}}" size="20" required maxlength="20" />
-        {% if "username" in validation_errors %}
-        <span>{{validation_errors["username"]}}</span>
-        {% endif %}
-    </p>
-    <p>
-        <label for="password1">Password</label>
-        <input type="password" name="password1" value="{{form.password1}}" size="20" required maxlength="512" />
-        {% if "password1" in validation_errors %}
-        <span>{{validation_errors["password1"]}}</span>
-        {% endif %}
-    </p>
-    <p>
-        <label for="password2">Repeat password</label>
-        <input type="password" name="password2" value="{{form.password2}}" size="20" required maxlength="512" />
-        {% if "password2" in validation_errors %}
-        <span>{{validation_errors["password2"]}}</span>
-        {% endif %}
-    </p>
-    <input type="submit" value="Register" />
-</form>
+<article>
+    <h2>Create a new account</h2>
+    <form action="/register" method="post">
+        <p>
+            <label for="username">Username</label>
+            <input type="text" name="username" value="{{form.username}}" size="20" required maxlength="20" />
+            {% if "username" in validation_errors %}
+            <span>{{validation_errors["username"]}}</span>
+            {% endif %}
+        </p>
+        <p>
+            <label for="password1">Password</label>
+            <input type="password" name="password1" value="{{form.password1}}" size="20" required maxlength="512" />
+            {% if "password1" in validation_errors %}
+            <span>{{validation_errors["password1"]}}</span>
+            {% endif %}
+        </p>
+        <p>
+            <label for="password2">Repeat password</label>
+            <input type="password" name="password2" value="{{form.password2}}" size="20" required maxlength="512" />
+            {% if "password2" in validation_errors %}
+            <span>{{validation_errors["password2"]}}</span>
+            {% endif %}
+        </p>
+        <input type="submit" value="Register" />
+    </form>
+</article>
 {% endblock %}

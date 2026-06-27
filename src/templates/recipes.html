@@ -1,11 +1,11 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<section>
+<article>
     <h2>Recipes</h2>
 
     <div class="search-container">
         <form action="/recipes" method="get">
-            <input type="text" name="query" value="{{form.query}}" class="search-query" size="50" maxlength="50" />
+            <input type="text" name="query" value="{{form.query}}" class="search-query" maxlength="50" />
             <input type="submit" value="Search" class="search-submit" />
         </form>
         <a href="/recipes" class="search-reset">Clear</a>
@@ -15,8 +15,8 @@
         <thead>
             <th scope="col">Title</th>
             <th scole="col">Rating</th>
-            <th scope="col">Created by</th>
-            <th scope="col">Created at</th>
+            <th scope="col">Created&nbsp;by</th>
+            <th scope="col">Created&nbsp;at</th>
             <th scope="col">Tags</th>
         </thead>
         <tbody>
@@ -24,39 +24,40 @@
             <tr>
                 <th scope="row"><a href="/recipes/{{recipe.id}}">{{recipe.title}}</a></th>
                 {% if recipe.avg_rating %}
-                <td>{{recipe.avg_rating | round(2, 'common')}}</td>
+                <td><span class="mobile-heading">Rating: </span>{{recipe.avg_rating | round(2, 'common')}}</td>
                 {% else %}
                 <td></td>
                 {% endif %}
-                <td><a href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
-                <td>{{recipe.created_at | format_datetime}}</td>
-                <td>{{recipe.tags if recipe.tags else ''}}</td>
+                <td><span class="mobile-heading">Created by: </span><a
+                        href="/users/{{recipe.user_id}}">{{recipe.username}}</a></td>
+                <td><span class="mobile-heading">Created at: </span>{{recipe.created_at | format_datetime}}</td>
+                <td><span class="mobile-heading">Tags: </span>{{recipe.tags if recipe.tags else ''}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <nav>
         <ul class="pagination-ctrls">
-            <li class="pagination-ctrl"><a href="?query={{form.query}}&page=1">First</a></li>
-            <li class="pagination-ctrl">
+            <li><a href="?query={{form.query}}&page=1">First</a></li>
+            <li>
                 {% if page > 1 %}
                 <a href="?query={{form.query}}&page={{page-1}}">Prev</a>
                 {% else %}
                 <span>Prev</span>
                 {% endif %}
             </li>
-            <li class="pagination-ctrl"><span>{{page}} / {{page_count}}</span></li>
-            <li class="pagination-ctrl">
+            <li><span>{{page}} / {{page_count}}</span></li>
+            <li>
                 {% if page_count > page %}
                 <a href="?query={{form.query}}&page={{page+1}}">Next</a>
                 {% else %}
                 <span>Next</span>
                 {% endif %}
             </li>
-            <li class="pagination-ctrl"><a href="?query={{form.query}}&page={{page_count}}">Last</a></li>
+            <li><a href="?query={{form.query}}&page={{page_count}}">Last</a></li>
         </ul>
     </nav>
-</section>
+</article>
 {% else %}
 <p>No recipes found</p>
 {% endif %}

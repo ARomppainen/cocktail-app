@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 {% import 'macros/recipe_form.html' as recipe_form %}
 {% block content %}
-<h2>New recipe</h2>
-{{ recipe_form.create(form, validation_errors, "/recipes/new", tags) }}
+<article>
+    <h2>New recipe</h2>
+    {{ recipe_form.create(form, validation_errors, "/recipes/new", tags) }}
+</article>
 {% endblock %}

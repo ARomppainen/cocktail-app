@@ -21,24 +21,23 @@
         </ul>
         <nav>
             <ul class="pagination-ctrls">
-                <li class="pagination-ctrl"><a href="?recipes_page=1&reviews_page={{reviews.page}}">First</a></li>
-                <li class="pagination-ctrl">
+                <li><a href="?recipes_page=1&reviews_page={{reviews.page}}">First</a></li>
+                <li>
                     {% if recipes.page > 1 %}
                     <a href="?recipes_page={{recipes.page-1}}&reviews_page={{reviews.page}}">Prev</a>
                     {% else %}
                     <span>Prev</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><span>{{recipes.page}} / {{recipes.page_count}}</span></li>
-                <li class="pagination-ctrl">
+                <li><span>{{recipes.page}} / {{recipes.page_count}}</span></li>
+                <li>
                     {% if recipes.page_count > recipes.page %}
                     <a href="?recipes_page={{recipes.page+1}}&reviews_page={{reviews.page}}">Next</a>
                     {% else %}
                     <span>Next</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><a
-                        href="?recipes_page={{recipes.page_count}}&reviews_page={{reviews.page}}">Last</a></li>
+                <li><a href="?recipes_page={{recipes.page_count}}&reviews_page={{reviews.page}}">Last</a></li>
             </ul>
         </nav>
         {% endif %}
@@ -57,7 +56,7 @@
         {% if reviews["items"] %}
         <ul>
             {% for review in reviews["items"] %}
-            <li class="user-review">
+            <li>
                 <details>
                     <summary><a href="{{'/recipes/' ~ review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}
                     </summary>
@@ -68,25 +67,23 @@
         </ul>
         <nav>
             <ul class="pagination-ctrls">
-                <li class="pagination-ctrl"><a href="?recipes_page={{recipes.page}}&reviews_page=1">First</a></li>
-                <li class="pagination-ctrl">
+                <li><a href="?recipes_page={{recipes.page}}&reviews_page=1">First</a></li>
+                <li>
                     {% if reviews.page > 1 %}
                     <a href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page-1}}">Prev</a>
                     {% else %}
                     <span>Prev</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><span>{{reviews.page}} / {{reviews.page_count}}</span></li>
-                <li class="pagination-ctrl">
+                <li><span>{{reviews.page}} / {{reviews.page_count}}</span></li>
+                <li>
                     {% if reviews.page_count > reviews.page %}
                     <a href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page+1}}">Next</a>
                     {% else %}
                     <span>Next</span>
                     {% endif %}
                 </li>
-                <li class="pagination-ctrl"><a
-                        href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page_count}}">Last</a>
-                </li>
+                <li><a href="?recipes_page={{recipes.page}}&reviews_page={{reviews.page_count}}">Last</a></li>
             </ul>
         </nav>
         {% endif %}

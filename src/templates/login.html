@@ -1,22 +1,25 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<h2>Log in</h2>
-<form action="/login" method="post">
-    <p>
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" value="{{form.username}}" size="20" required maxlength="20" />
-        {% if "username" in validation_errors %}
-        <span>{{validation_errors["username"]}}</span>
-        {% endif %}
-    </p>
-    <p>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" value="{{form.password}}" size="20" required
-            maxlength="512" />
-        {% if "password" in validation_errors %}
-        <span>{{validation_errors["password"]}}</span>
-        {% endif %}
-    </p>
-    <input type="submit" value="Submit" />
-</form>
+<article>
+    <h2>Log in</h2>
+    <form action="/login" method="post">
+        <p>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" value="{{form.username}}" size="20" required
+                maxlength="20" />
+            {% if "username" in validation_errors %}
+            <span>{{validation_errors["username"]}}</span>
+            {% endif %}
+        </p>
+        <p>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" value="{{form.password}}" size="20" required
+                maxlength="512" />
+            {% if "password" in validation_errors %}
+            <span>{{validation_errors["password"]}}</span>
+            {% endif %}
+        </p>
+        <input type="submit" value="Submit" />
+    </form>
+</article>
 {% endblock %}
