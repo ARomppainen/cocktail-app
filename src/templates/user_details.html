@@ -1,9 +1,8 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<article>
-    <h2>User details: {{user.username}}</h2>
-    <section>
-        <h3>Recipes by {{user.username}}</h3>
+<div class="two-columns">
+    <article>
+        <h2>Recipes by {{user.username}}</h2>
         {% if recipes.row_count == 0 %}
         <p>{{user.username}} has not created any recipes.</p>
         {% endif %}
@@ -41,9 +40,9 @@
             </ul>
         </nav>
         {% endif %}
-    </section>
-    <section>
-        <h3>Reviews by {{user.username}}</h3>
+    </article>
+    <article>
+        <h2>Reviews by {{user.username}}</h2>
         {% if reviews.row_count == 0 %}
         <p>{{user.username}} has not written any reviews.</p>
         {% endif %}
@@ -87,6 +86,6 @@
             </ul>
         </nav>
         {% endif %}
-    </section>
-</article>
+    </article>
+</div>
 {% endblock %}
