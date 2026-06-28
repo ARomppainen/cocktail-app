@@ -60,6 +60,7 @@
                     <summary><a href="{{'/recipes/' ~ review.recipe_id}}">{{review.recipe_title}}</a> - {{review.title}}
                     </summary>
                     <p>{{review.content}}</p>
+                    <p>Rating: <span>{{'★' * review.rating}}</span></p>
                 </details>
             </li>
             {% endfor %}
